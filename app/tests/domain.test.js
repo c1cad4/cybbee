@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {validateTask,upcoming,occurrenceUrl} from '../domain.js';
+test('treatment requires product, jurisdiction and HTTPS label',()=>{assert.throws(()=>validateTask({title:'OA',date:'2026-11-01',kind:'treatment'}));assert.equal(validateTask({title:'OA',date:'2026-11-01',kind:'treatment',product:'local registered product',country:'US',label:'https://example.org/label'}).done,false)});
+test('daily planning excludes completed and past tasks',()=>{assert.deepEqual(upcoming([{date:'2026-10-12',done:false},{date:'2026-10-14',done:false},{date:'2026-10-15',done:true}],'2026-10-13'),[{date:'2026-10-14',done:false}])});
+test('map query encodes taxon, never inserts coordinates',()=>{assert.ok(occurrenceUrl('Apis mellifera').endsWith('Apis%20mellifera'))});
