@@ -13,6 +13,7 @@ class Handler(SimpleHTTPRequestHandler):
     def send_json(self,value,status=200):
         data=json.dumps(value,ensure_ascii=False).encode();self.send_response(status);self.send_header('Content-Type','application/json; charset=utf-8');self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(data)
     def do_GET(self):
+        self.path=self.path.split("?",1)[0]
         if self.path=='/api/community/posts':return self.send_json(community.posts())
         if self.path=='/api/community/points':return self.send_json(community.points())
         if self.path=='/api/payments/config':return self.send_json(payments.config())
