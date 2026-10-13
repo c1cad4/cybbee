@@ -1,0 +1,4 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {seasonFor,resolveLanguage,translation,languages} from '../presentation.js';
+test('hemispheres reverse all seasons and year boundaries',()=>{assert.equal(seasonFor(11),'winter');assert.equal(seasonFor(0,'south'),'summer');assert.equal(seasonFor(2),'spring');assert.equal(seasonFor(5),'summer');assert.equal(seasonFor(8),'autumn');assert.equal(seasonFor(8,'south'),'spring')});
+test('manual and tropical override never imply local weather',()=>{assert.equal(seasonFor(0,'tropical'),'tropical');assert.equal(seasonFor(0,'north','summer'),'summer');assert.throws(()=>seasonFor(12))});
+test('language normalization and honest fallback',()=>{assert.equal(resolveLanguage('pt-BR'),'pt');assert.equal(resolveLanguage('ja-JP'),'en');assert.equal(languages.length,10);assert.equal(translation('Добавить улей','en'),'Add hive');assert.equal(translation('untranslated','ar'),'untranslated')});

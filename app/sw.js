@@ -1,4 +1,4 @@
-const CACHE='cybbee-shell-v2';const FILES=['./','./index.html','./style.css','./app.js','./checkout.js','./domain.js','./manifest.webmanifest','./assets/bee.svg','./assets/meadow.svg','./assets/honeycomb.svg'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES))));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('cybbee-shell-')&&k!==CACHE).map(k=>caches.delete(k))))));
+const CACHE='cybbee-shell-v3';const FILES=['./','./index.html','./style.css','./app.js','./checkout.js','./domain.js','./presentation.js','./manifest.webmanifest','./assets/bee.svg','./assets/meadow.svg','./assets/honeycomb.svg'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',e=>e.waitUntil(self.clients.claim().then(()=>caches.keys()).then(keys=>Promise.all(keys.filter(k=>k.startsWith('cybbee-shell-')&&k!==CACHE).map(k=>caches.delete(k))))));
 self.addEventListener('fetch',e=>{if(new URL(e.request.url).pathname.startsWith('/api/'))return;if(e.request.method!=='GET'||new URL(e.request.url).origin!==self.location.origin)return;e.respondWith(caches.match(e.request).then(hit=>hit||fetch(e.request)));});
