@@ -22,3 +22,7 @@
 - https://operations.osmfoundation.org/policies/tiles/
 
 Запуск: `python3 -m pip install -r server/requirements.txt`, затем `python3 server/main.py`; http://localhost:8773. Общая БД хранится в server/data (игнорируется Git). Не публиковать тестовые или личные записи.
+
+## Проверка 2026-10-13
+
+На текущем Mac в тестовом браузере WebLLM загрузил модель и показал готовность к локальным ответам. Первое подключение через esm.sh обнаружило ошибку createRequire; использован прямой браузерный lib/index.js npm-пакета на unpkg.com. Карта реально загрузила OSM tiles; тестовая личная точка не публиковалась. Android-устройство не доступно, измерения скорости Android не выполнены.
