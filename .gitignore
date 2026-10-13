@@ -1,3 +1,6 @@
 /target/
 __pycache__/
 *.pyc
+
+/server/data/
+__pycache__/
