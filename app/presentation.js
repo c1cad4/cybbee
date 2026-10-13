@@ -1,3 +1,4 @@
+import {extraRows} from './locale-extra.js';
 export function seasonFor(month,hemisphere='north',override='auto'){
  if(['spring','summer','autumn','winter','tropical'].includes(override))return override;
  if(hemisphere==='tropical')return 'tropical';
@@ -30,6 +31,7 @@ const rows=[
  ['Каждая семья заслуживает внимания','Every colony deserves care','每个蜂群都值得关爱','हर कॉलोनी को देखभाल चाहिए','Cada colonia merece cuidado','كل طائفة تستحق العناية','Cada colônia merece cuidado','প্রতিটি কলোনির যত্ন প্রয়োজন','Chaque colonie mérite de l’attention','Jedes Volk verdient Fürsorge'],
  ['Установить','Install','安装','इंस्टॉल करें','Instalar','تثبيت','Instalar','ইনস্টল করুন','Installer','Installieren']
 ];
+rows.push(...extraRows);
 export function resolveLanguage(requested){const base=(requested||'en').toLowerCase().split(/[-_]/)[0];return languages.some(([code])=>code===base)?base:'en';}
 export function translation(text,lang){const index=languages.findIndex(([code])=>code===resolveLanguage(lang));const row=rows.find(row=>row[0]===text);return row?row[index]:text;}
 export function translateUI(root,lang){const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const node of nodes){if(node.parentElement?.closest('[data-user-text],script,style'))continue;const text=node.textContent.trim();const translated=translation(text,lang);if(translated!==text)node.textContent=node.textContent.replace(text,translated);}}
