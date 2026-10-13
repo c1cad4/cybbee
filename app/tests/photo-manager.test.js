@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {formatBytes,photoUsage} from '../photo-manager.js';
+test('storage summary includes trash and pending reservations, formats bounded usage',()=>{assert.equal(formatBytes(500000),'500 КБ');assert.equal(formatBytes(2500000),'2.50 МБ');const text=photoUsage({photos:[{}],trash:[{}],pending:[{}],usage:{count:3,limit:100,bytes:1500000,maxBytes:50000000}});assert.match(text,/1 активных/);assert.match(text,/1 в корзине/);assert.match(text,/1 незавершённых/);assert.match(text,/1.50 МБ/)});
