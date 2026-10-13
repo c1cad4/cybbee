@@ -4,3 +4,9 @@ __pycache__/
 
 /server/data/
 __pycache__/
+
+/app/vendor/pdfjs/
+
+/hosting/worker/index.js
+
+/hosting/dist/

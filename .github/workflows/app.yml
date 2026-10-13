@@ -12,6 +12,8 @@ jobs:
           node-version: "22"
       - run: node --check app/app.js && node --check app/checkout.js
       - run: node --test app/tests/*.test.js
+      - run: bash hosting/scripts/build.sh
+      - run: node hosting/scripts/validate-artifact.mjs
       - run: node --test hosting/tests/*.test.mjs
       - run: python3 -m pip install -r server/requirements.txt
       - run: python3 -m unittest discover -s server/tests -v

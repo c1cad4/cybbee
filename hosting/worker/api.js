@@ -24,14 +24,15 @@ async function journalScope(owner){return [...new Uint8Array(await crypto.subtle
 function applyJournalChanges(journal,changes){
  if(!Array.isArray(changes)||!changes.length||changes.length>500)fail('Ожидается от 1 до 500 изменений');
  const result=JSON.parse(JSON.stringify(journal)),seen=new Set();
- for(const change of changes){if(!change||!['hives','tasks','notes','settings'].includes(change.collection)||typeof change.id!=='string'||! /^[a-zA-Z0-9_-]{1,80}$/.test(change.id)||!Object.hasOwn(change,'value'))fail('Неверная запись');const key=change.collection+':'+change.id;if(seen.has(key))fail('Повтор записи');seen.add(key);
+ for(const change of changes){if(!change||!['hives','tasks','notes','flowerings','settings'].includes(change.collection)||typeof change.id!=='string'||! /^[a-zA-Z0-9_-]{1,80}$/.test(change.id)||!Object.hasOwn(change,'value'))fail('Неверная запись');const key=change.collection+':'+change.id;if(seen.has(key))fail('Повтор записи');seen.add(key);
  if(change.collection==='settings'){if(!['region','language','hemisphere','season'].includes(change.id)||typeof change.value!=='string'||change.value.length>200)fail('Неверная настройка');result[change.id]=change.value;continue}
- if(!Array.isArray(result[change.collection]))fail('Неверный журнал');const index=result[change.collection].findIndex(row=>row.id===change.id);
+ if(change.collection==='flowerings'&&result.flowerings===undefined)result.flowerings=[];if(!Array.isArray(result[change.collection]))fail('Неверный журнал');const index=result[change.collection].findIndex(row=>row.id===change.id);
  if(change.value===null){if(index>=0)result[change.collection].splice(index,1);continue}
  const row=change.value;if(typeof row!=='object'||Array.isArray(row)||row.id!==change.id||JSON.stringify(row).length>15000)fail('Неверная запись');
  if(change.collection==='hives'&&(typeof row.name!=='string'||!row.name.trim()||row.name.length>100))fail('Неверное название улья');
  if(change.collection!=='hives'&&(typeof row.date!=='string'||! /^\d{4}-\d{2}-\d{2}$/.test(row.date)||new Date(row.date+'T12:00:00Z').toISOString().slice(0,10)!==row.date))fail('Неверная дата');
  if(change.collection==='notes'&&(typeof row.text!=='string'||row.text.length>5000))fail('Неверный осмотр');
+ if(change.collection==='flowerings'){if(typeof row.plant!=='string'||!row.plant.trim()||row.plant.length>100||typeof row.region!=='string'||!row.region.trim()||row.region.length>200||typeof row.text!=='string'||row.text.length>2000)fail('Неверное наблюдение цветения');if(row.end){const end=new Date(row.end+'T12:00:00Z');if(typeof row.end!=='string'||! /^\d{4}-\d{2}-\d{2}$/.test(row.end)||!Number.isFinite(end.getTime())||end.toISOString().slice(0,10)!==row.end||row.end<row.date)fail('Неверное окончание цветения')}}
  if(change.collection==='tasks'&&(typeof row.title!=='string'||!row.title.trim()||row.title.length>200||typeof row.done!=='boolean'))fail('Неверная задача');
  if(index<0)result[change.collection].push(row);else result[change.collection][index]=row;
  }
