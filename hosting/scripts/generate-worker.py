@@ -1,0 +1,14 @@
+from pathlib import Path
+import json
+root=Path(__file__).resolve().parents[1]
+app=root.parent/'app'
+if not app.exists():app=root.parent/'cybbee'/'app'
+assets={}
+for p in app.rglob('*'):
+ if p.is_file() and 'tests' not in p.parts and p.name!='package.json':assets['/'+str(p.relative_to(app))]=p.read_text()
+api=(root/'worker/api.js').read_text().replace('export function validateTransfer','function validateTransfer').replace('export async function api','async function api')
+footer="""
+const TYPES={js:'application/javascript; charset=utf-8',css:'text/css; charset=utf-8',html:'text/html; charset=utf-8',svg:'image/svg+xml',webmanifest:'application/manifest+json'};
+export default {async fetch(request,env){const url=new URL(request.url);if(url.pathname.startsWith('/api/'))return api(request,env);const path=url.pathname==='/'?'/index.html':url.pathname;const body=ASSETS[path];if(body===undefined)return new Response('Not found',{status:404});return new Response(body,{headers:{'Content-Type':TYPES[path.split('.').pop()]||'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','Cache-Control':path==='/sw.js'?'no-cache':'no-cache'}})}};
+"""
+(root/'worker/index.js').write_text('const ASSETS='+json.dumps(assets,ensure_ascii=False)+';\n'+api+'\n'+footer)

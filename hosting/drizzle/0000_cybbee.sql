@@ -1,0 +1,6 @@
+CREATE TABLE bee_posts (id TEXT PRIMARY KEY, owner TEXT NOT NULL, author TEXT NOT NULL, kind TEXT NOT NULL, text TEXT NOT NULL, created INTEGER NOT NULL, hidden INTEGER NOT NULL DEFAULT 0);
+CREATE INDEX bee_posts_created ON bee_posts(created);
+CREATE TABLE bee_points (owner TEXT PRIMARY KEY, id TEXT NOT NULL, name TEXT NOT NULL, lat REAL NOT NULL, lon REAL NOT NULL, created INTEGER NOT NULL);
+CREATE TABLE bee_reports (post_id TEXT NOT NULL, reporter TEXT NOT NULL, reason TEXT NOT NULL, created INTEGER NOT NULL, PRIMARY KEY(post_id,reporter));
+CREATE TABLE bee_journals (owner TEXT PRIMARY KEY, payload TEXT NOT NULL, revision INTEGER NOT NULL DEFAULT 1, updated INTEGER NOT NULL);
+CREATE TABLE bee_invoices (id TEXT PRIMARY KEY, owner TEXT NOT NULL, payload TEXT NOT NULL, signature TEXT UNIQUE, paid INTEGER NOT NULL DEFAULT 0);
