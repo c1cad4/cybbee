@@ -12,7 +12,7 @@ for p in app.rglob('*'):
   else:
    try:assets[path]=p.read_text()
    except UnicodeDecodeError:binary[path]=base64.b64encode(p.read_bytes()).decode('ascii')
-api=(root/'worker/api.js').read_text().replace('export function validateTransfer','function validateTransfer').replace('export async function api','async function api')
+api=(app/'season-records.js').read_text().replace('export ','')+'\n'+(root/'worker/api.js').read_text().replace("import {validateQueenRecord,validateExpenseRecord,validateSeasonLinks} from '../app/season-records.js';\n",'').replace('export function validateTransfer','function validateTransfer').replace('export async function api','async function api')
 footer="""
 const TYPES={mjs:'application/javascript; charset=utf-8',wasm:'application/wasm',bcmap:'application/octet-stream',pfb:'application/octet-stream',ttf:'font/ttf',js:'application/javascript; charset=utf-8',css:'text/css; charset=utf-8',html:'text/html; charset=utf-8',svg:'image/svg+xml',webmanifest:'application/manifest+json'};
 export default {async fetch(request,env){const url=new URL(request.url);if(url.pathname.startsWith('/api/'))return api(request,env);const path=url.pathname==='/'?'/index.html':url.pathname;const body=ASSETS[path];if(body===undefined&&BINARY[path]===undefined)return new Response('Not found',{status:404});return new Response(body===undefined?Uint8Array.from(atob(BINARY[path]),c=>c.charCodeAt(0)):body,{headers:{'Content-Type':TYPES[path.split('.').pop()]||'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','Cache-Control':path==='/sw.js'?'no-cache':'no-cache'}})}};

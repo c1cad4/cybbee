@@ -1,3 +1,4 @@
+import {seasonRows} from './season-locales.js';
 import {uiEnglish} from './ui-english.js';
 import {extraRows} from './locale-extra.js';
 export function seasonFor(month,hemisphere='north',override='auto'){
@@ -32,7 +33,7 @@ const rows=[
  ['Каждая семья заслуживает внимания','Every colony deserves care','每个蜂群都值得关爱','हर कॉलोनी को देखभाल चाहिए','Cada colonia merece cuidado','كل طائفة تستحق العناية','Cada colônia merece cuidado','প্রতিটি কলোনির যত্ন প্রয়োজন','Chaque colonie mérite de l’attention','Jedes Volk verdient Fürsorge'],
  ['Установить','Install','安装','इंस्टॉल करें','Instalar','تثبيت','Instalar','ইনস্টল করুন','Installer','Installieren']
 ];
-rows.push(...extraRows);
+rows.push(...extraRows,...seasonRows);
 export function resolveLanguage(requested){const base=(requested||'en').toLowerCase().split(/[-_]/)[0];return languages.some(([code])=>code===base)?base:'en';}
 const englishFragments=Object.entries(uiEnglish).sort((a,b)=>b[0].length-a[0].length).map(([key,value])=>[new RegExp('(?<![\\p{L}\\p{N}])'+key.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{N}])','gu'),value]);
 function translateValue(text,lang){const index=languages.findIndex(([code])=>code===resolveLanguage(lang));const row=rows.find(row=>row[0]===text);if(row)return row[index];if(resolveLanguage(lang)!=='en')return text;if(uiEnglish[text])return uiEnglish[text];if(!/[А-Яа-яЁё]/.test(text))return text;let translated=text;for(const [source,target]of englishFragments)translated=translated.replace(source,target);return translated;}

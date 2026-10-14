@@ -1,0 +1,2 @@
+import {readFile} from 'node:fs/promises';
+export async function apiSource(){let shared;try{shared=await readFile(new URL('../app/season-records.js',import.meta.url),'utf8')}catch{shared=await readFile(new URL('../../app/season-records.js',import.meta.url),'utf8')}const source=await readFile(new URL('../worker/api.js',import.meta.url),'utf8');return shared+"\n"+source.replace("import {validateQueenRecord,validateExpenseRecord,validateSeasonLinks} from '../app/season-records.js';\n",'')}

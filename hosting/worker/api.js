@@ -1,3 +1,4 @@
+import {validateQueenRecord,validateExpenseRecord,validateSeasonLinks} from '../app/season-records.js';
 const RECIPIENT='AHBz386tP36ZrABN7STzxV66u1f7CwnaqrFBnevb4ff8',MINT='9QLCEL7Xo9VTwgBeAYU1PWX7JJ8joKxQCYw3msjUpump',SOL='So11111111111111111111111111111111111111112';
 const TOKEN='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',SYSTEM='11111111111111111111111111111111';
 const PLANS={monthly:10,yearly:100};
@@ -24,13 +25,15 @@ async function journalScope(owner){return [...new Uint8Array(await crypto.subtle
 function applyJournalChanges(journal,changes){
  if(!Array.isArray(changes)||!changes.length||changes.length>500)fail('Ожидается от 1 до 500 изменений');
  const result=JSON.parse(JSON.stringify(journal)),seen=new Set();
- for(const change of changes){if(!change||!['hives','tasks','notes','flowerings','breeding','settings'].includes(change.collection)||typeof change.id!=='string'||! /^[a-zA-Z0-9_-]{1,80}$/.test(change.id)||!Object.hasOwn(change,'value'))fail('Неверная запись');const key=change.collection+':'+change.id;if(seen.has(key))fail('Повтор записи');seen.add(key);
+ for(const change of changes){if(!change||!['hives','tasks','notes','flowerings','breeding','queens','expenses','settings'].includes(change.collection)||typeof change.id!=='string'||! /^[a-zA-Z0-9_-]{1,80}$/.test(change.id)||!Object.hasOwn(change,'value'))fail('Неверная запись');const key=change.collection+':'+change.id;if(seen.has(key))fail('Повтор записи');seen.add(key);
  if(change.collection==='settings'){if(!['region','language','hemisphere','season'].includes(change.id)||typeof change.value!=='string'||change.value.length>200)fail('Неверная настройка');result[change.id]=change.value;continue}
- if(['flowerings','breeding'].includes(change.collection)&&result[change.collection]===undefined)result[change.collection]=[];if(!Array.isArray(result[change.collection]))fail('Неверный журнал');const index=result[change.collection].findIndex(row=>row.id===change.id);
+ if(['flowerings','breeding','queens','expenses'].includes(change.collection)&&result[change.collection]===undefined)result[change.collection]=[];if(!Array.isArray(result[change.collection]))fail('Неверный журнал');const index=result[change.collection].findIndex(row=>row.id===change.id);
  if(change.value===null){if(index>=0)result[change.collection].splice(index,1);continue}
  const row=change.value;if(typeof row!=='object'||Array.isArray(row)||row.id!==change.id||JSON.stringify(row).length>15000)fail('Неверная запись');
+ try{if(change.collection==='queens')validateQueenRecord(row);if(change.collection==='expenses')validateExpenseRecord(row)}catch(e){fail(e.message)}
  if(change.collection==='hives'&&(typeof row.name!=='string'||!row.name.trim()||row.name.length>100))fail('Неверное название улья');
  if(change.collection!=='hives'&&(typeof row.date!=='string'||! /^\d{4}-\d{2}-\d{2}$/.test(row.date)||new Date(row.date+'T12:00:00Z').toISOString().slice(0,10)!==row.date))fail('Неверная дата');
+ if(change.collection==='notes')for(const [key,max]of [['batch',100],['floralSource',150],['queenId',80]])if(row[key]!==undefined&&(typeof row[key]!=='string'||row[key].length>max||key==='queenId'&&row[key]!==''&&!/^[a-zA-Z0-9_-]+$/.test(row[key])))fail('Проверьте поля записи');
  if(change.collection==='notes'&&row.queenStatus!==undefined&&!['unknown','seen','eggs','noSigns'].includes(row.queenStatus))fail('Неверное состояние матки');
  if(change.collection==='notes'&&(typeof row.text!=='string'||row.text.length>5000))fail('Неверный осмотр');
  if(change.collection==='flowerings'){if(typeof row.plant!=='string'||!row.plant.trim()||row.plant.length>100||typeof row.region!=='string'||!row.region.trim()||row.region.length>200||typeof row.text!=='string'||row.text.length>2000)fail('Неверное наблюдение цветения');if(row.end){const end=new Date(row.end+'T12:00:00Z');if(typeof row.end!=='string'||! /^\d{4}-\d{2}-\d{2}$/.test(row.end)||!Number.isFinite(end.getTime())||end.toISOString().slice(0,10)!==row.end||row.end<row.date)fail('Неверное окончание цветения')}}
@@ -38,7 +41,7 @@ function applyJournalChanges(journal,changes){
  if(change.collection==='tasks'&&(typeof row.title!=='string'||!row.title.trim()||row.title.length>200||typeof row.done!=='boolean'||row.suspended!==undefined&&typeof row.suspended!=='boolean'))fail('Неверная задача');
  if(index<0)result[change.collection].push(row);else result[change.collection][index]=row;
  }
- if(new TextEncoder().encode(JSON.stringify(result)).length>200000)fail('Журнал превышает 200 КБ. Экспортируйте резервную копию.',413);return result;
+ try{validateSeasonLinks(result)}catch(e){fail(e.message)}if(new TextEncoder().encode(JSON.stringify(result)).length>200000)fail('Журнал превышает 200 КБ. Экспортируйте резервную копию.',413);return result;
 }
 async function syncJournal(db,owner,p){
  if(!Number.isSafeInteger(p.revision)||p.revision<0)fail('Неверная версия');const old=await db.prepare('SELECT payload,revision,updated FROM bee_journals WHERE owner=?').bind(owner).first();if((old?.revision||0)!==p.revision)fail('Журнал изменился на другом устройстве. Повторите синхронизацию.',409);

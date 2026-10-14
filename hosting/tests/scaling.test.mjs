@@ -1,5 +1,6 @@
+import {apiSource} from './api-source.mjs';
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile,mkdtemp,rm} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';import {spawnSync} from 'node:child_process';
-const source=await readFile(new URL('../worker/api.js',import.meta.url),'utf8');const {api,postPage,pointPage,limitedJSON,pageSize,mapBounds}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+const source=await apiSource();const {api,postPage,pointPage,limitedJSON,pageSize,mapBounds}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
 const root=await mkdtemp(join(tmpdir(),'cybbee-scale-'));const database=join(root,'fixture.db');const adapter=new URL('./sqlite-adapter.py',import.meta.url).pathname;
 function sql(statement,values=[]){const r=spawnSync('python3',[adapter,database],{input:JSON.stringify({sql:statement,values}),encoding:'utf8'});assert.equal(r.status,0,r.stderr);return JSON.parse(r.stdout)}
 const db={prepare(statement){let values=[];return {bind(...args){values=args;return this},async all(){return sql(statement,values)},async first(){return sql(statement,values).first},async run(){return sql(statement,values)}}}};

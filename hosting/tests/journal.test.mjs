@@ -1,5 +1,6 @@
+import {apiSource} from './api-source.mjs';
 import test from 'node:test';import assert from 'node:assert/strict';import {readFile,mkdtemp,rm} from 'node:fs/promises';import {tmpdir} from 'node:os';import {join} from 'node:path';import {spawnSync} from 'node:child_process';
-const source=await readFile(new URL('../worker/api.js',import.meta.url),'utf8'),{api}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
+const source=await apiSource(),{api}=await import('data:text/javascript;base64,'+Buffer.from(source).toString('base64'));
 test('journal deltas: scoped access, CAS conflicts, transactional history, invalid records and bounded history',async()=>{const root=await mkdtemp(join(tmpdir(),'bee-journal-')),path=join(root,'db');try{const migrations=await Promise.all(['0000_cybbee.sql','0001_scaling.sql','0002_journal_history.sql'].map(n=>readFile(new URL('../drizzle/'+n,import.meta.url),'utf8')));assert.equal(spawnSync('python3',['-c','import sqlite3,sys;sqlite3.connect(sys.argv[1]).executescript(sys.stdin.read())',path],{input:migrations.join('\n')}).status,0);
 function execute(items){const script=`import sqlite3,json,sys\nc=sqlite3.connect(sys.argv[1]);c.row_factory=sqlite3.Row;out=[]\nwith c:\n for item in json.loads(sys.stdin.read()):\n  before=c.total_changes;rows=[dict(r) for r in c.execute(item['sql'],item['values']).fetchall()];out.append({'results':rows,'first':rows[0] if rows else None,'meta':{'changes':c.total_changes-before}})\nprint(json.dumps(out))`;const result=spawnSync('python3',['-c',script,path],{input:JSON.stringify(items),encoding:'utf8'});assert.equal(result.status,0,result.stderr);return JSON.parse(result.stdout)}
 const db={prepare(sql){const query={sql,values:[]};return {query,bind(...values){query.values=values;return this},async first(){return execute([query])[0].first},async run(){return execute([query])[0]}}},async batch(items){return execute(items.map(x=>x.query))}};
@@ -20,6 +21,14 @@ const observation={id:'queen-observation',date:'2026-10-14',text:'Observed eggs'
 assert.equal((await call('/api/journal/sync',{revision:16,changes:[{collection:'notes',id:observation.id,value:observation}]})).status,200);
 assert.equal((await (await call('/api/journal')).json()).journal.notes.find(n=>n.id===observation.id).queenStatus,'eggs');
 assert.equal((await call('/api/journal/sync',{revision:17,changes:[{collection:'notes',id:observation.id,value:{...observation,queenStatus:'diagnosed'}}]})).status,400);
+const seasonCall=(path,body)=>call(path,body,'season-tester');
+const passport={id:'queen1',hiveId:'h1',name:'Queen 2026',origin:'Own',birthYear:2026,date:'2026-05-01',end:'',status:'active',projectId:'',text:''};const cost={id:'cost1',date:'2026-07-01',title:'Feed',category:'feed',cents:1050,currency:'RUB',hiveId:'h1',text:'',voided:false};
+assert.equal((await seasonCall('/api/journal/sync',{revision:0,changes:[{collection:'hives',id:'h1',value:{id:'h1',name:'One'}},{collection:'hives',id:'h2',value:{id:'h2',name:'Two'}},{collection:'queens',id:'queen1',value:passport},{collection:'expenses',id:'cost1',value:cost}]})).status,200);
+const afterSeason=(await (await call('/api/journal',null,'season-tester')).json()).journal;assert.equal(afterSeason.queens[0].name,'Queen 2026');assert.equal(afterSeason.expenses[0].cents,1050);
+assert.equal((await seasonCall('/api/journal/sync',{revision:1,changes:[{collection:'expenses',id:'cost1',value:{...cost,cents:-1}}]})).status,400);
+assert.equal((await seasonCall('/api/journal/sync',{revision:1,changes:[{collection:'queens',id:'queen1',value:{...passport,date:'2026-02-30'}}]})).status,400);
+assert.equal((await seasonCall('/api/journal/sync',{revision:1,changes:[{collection:'notes',id:'linked',value:{id:'linked',hiveId:'h1',queenId:'queen1',date:'2026-06-01',text:'Eggs observed',queenStatus:'eggs'}}]})).status,200);
+assert.equal((await seasonCall('/api/journal/sync',{revision:2,changes:[{collection:'notes',id:'bad-link',value:{id:'bad-link',hiveId:'h2',queenId:'queen1',date:'2026-06-01',text:'Wrong hive'}}]})).status,400);
 // An old browser cannot overwrite the new merged journal with a snapshot.
 assert.equal((await call('/api/journal',{revision:13,journal:{hives:[],tasks:[],notes:[]}},'alice','PUT')).status,409);
 }finally{await rm(root,{recursive:true,force:true})}});
