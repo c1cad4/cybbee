@@ -25,3 +25,10 @@ test('existing text and attributes switch across all languages and back without 
   translateUI(root,'en');assert.equal(node.textContent,'Личный текст пользователя');assert.equal(attrs.placeholder,'Личная подпись');
  }finally{globalThis.document=oldDocument;globalThis.NodeFilter=oldFilter;}
 });
+
+test('settings interface rows cover ten languages without Russian fallback',async()=>{
+ const {settingsRows}=await import('../settings-locales.js');
+ for(const row of settingsRows){assert.equal(row.length,10,row[0]);assert.ok(row.every(v=>v.trim()),row[0]);
+  for(let i=1;i<languages.length;i++){assert.ok(!/[А-Яа-яЁё]/.test(row[i]),row[0]+' '+languages[i][0]);assert.equal(translation(row[0],languages[i][0]),row[i]);}
+ }
+});
