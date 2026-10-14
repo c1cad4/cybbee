@@ -40,6 +40,34 @@ const englishFragments=Object.entries(uiEnglish).sort((a,b)=>b[0].length-a[0].le
 function translateValue(text,lang){const index=languages.findIndex(([code])=>code===resolveLanguage(lang));const row=rows.find(row=>row[0]===text);if(row)return row[index];if(resolveLanguage(lang)!=='en')return text;if(uiEnglish[text])return uiEnglish[text];if(!/[А-Яа-яЁё]/.test(text))return text;let translated=text;for(const [source,target]of englishFragments)translated=translated.replace(source,target);return translated;}
 const translationCache=new Map();
 export function translation(text,lang){const key=resolveLanguage(lang)+'|'+text;if(translationCache.has(key))return translationCache.get(key);const value=translateValue(text,lang);if(translationCache.size>=2000)translationCache.clear();translationCache.set(key,value);return value;}
-export function translateUI(root,lang){const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const node of nodes){if(node.parentElement?.closest('[data-user-text],script,style'))continue;const text=node.textContent.trim();const translated=translation(text,lang);if(translated!==text)node.textContent=node.textContent.replace(text,translated);}for(const element of root.querySelectorAll('[placeholder],[aria-label],[title],[alt]')){if(element.closest('[data-user-text],[lang=ru][data-original]'))continue;for(const name of ['placeholder','aria-label','title','alt']){const value=element.getAttribute(name);if(value)element.setAttribute(name,translation(value,lang))}}}
+// Keep original interface copy so a second language change does not translate
+// an already translated string. Weak maps release removed DOM nodes naturally.
+const sourceText=new WeakMap(),sourceAttributes=new WeakMap();
+const protectedCopy='[data-user-text],[data-original],script,style';
+export function translateUI(root,lang){
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];
+ while(walker.nextNode())nodes.push(walker.currentNode);
+ for(const node of nodes){
+  if(node.parentElement?.closest(protectedCopy))continue;
+  let record=sourceText.get(node);
+  if(!record||node.textContent!==record.output)record={source:node.textContent};
+  const trimmed=record.source.trim(),translated=translation(trimmed,lang);
+  record.output=record.source.replace(trimmed,translated);
+  if(node.textContent!==record.output)node.textContent=record.output;
+  sourceText.set(node,record);
+ }
+ for(const element of root.querySelectorAll('[placeholder],[aria-label],[title],[alt]')){
+  if(element.closest(protectedCopy))continue;
+  const records=sourceAttributes.get(element)||{};
+  for(const name of ['placeholder','aria-label','title','alt']){
+   const value=element.getAttribute(name);if(value===null){delete records[name];continue;}
+   let record=records[name];if(!record||value!==record.output)record={source:value};
+   record.output=translation(record.source,lang);
+   if(value!==record.output)element.setAttribute(name,record.output);
+   records[name]=record;
+  }
+  sourceAttributes.set(element,records);
+ }
+}
 
 export function observeLocalization(root){let queued=false;const observer=new MutationObserver(()=>{if(queued)return;queued=true;queueMicrotask(()=>{queued=false;translateUI(root,document.documentElement.lang)})});observer.observe(root,{subtree:true,childList:true,characterData:true});return observer;}
