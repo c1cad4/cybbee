@@ -1,6 +1,7 @@
 import {floraDetails,beeDetails} from './knowledge.js';
 // UI wording. User content and explicitly marked Russian originals are excluded by the renderer.
-const lines=`Как пользоваться обзором|How to use this overview
+const lines=`На фото|Pictured
+Как пользоваться обзором|How to use this overview
 CYBBEE · ЛИЧНЫЙ ЖУРНАЛ|CYBBEE · PERSONAL JOURNAL
 Ульев в журнале|Hives in your journal
 Сегодня|Today
@@ -280,7 +281,7 @@ Object.assign(uiEnglish,{
 'Зарегистрированные находки на GBIF ↗':'Registered occurrences on GBIF ↗',
 'GBIF показывает записи находок; это не календарь цветения. Иллюстрация условная и не служит определителем растения.':'GBIF shows occurrence records, not a flowering calendar. The illustration is symbolic and cannot identify the plant.',
 'Как читать карту распространения':'Read an occurrence map',
-'Точка находки означает, что наблюдение было зарегистрировано. Отсутствие точек не доказывает отсутствие вида. Проверяйте дату, источник и качество определения. Общий значок пчелы не показывает признаки конкретного вида.':'A point means an observation was registered. Missing points do not prove a species is absent. Check date, source and identification quality. A generic bee icon does not show species-specific characteristics.',
+'Точка находки означает, что наблюдение было зарегистрировано. Отсутствие точек не доказывает отсутствие вида. Проверяйте дату, источник и качество определения. Фотография показывает отдельную особь, а не все варианты окраски вида. По одному снимку нельзя надёжно определить происхождение семьи.':'A point means an observation was registered. Missing points do not prove a species is absent. Check date, source and identification quality. The photograph shows one individual, not every colour variation of the species. A single image cannot reliably establish the origin of a colony.',
 'Что полезно записать':'Useful records',
 'Уточнённый вид или отметку «не определён».':'Identified species or a note that it is unknown.',
 'Общий регион и дату наблюдения.':'General region and observation date.',
