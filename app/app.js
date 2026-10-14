@@ -1,3 +1,4 @@
+import {hiveFromHash} from './hive-insights.js';
 import {bindSaveStatus} from './save-status.js';
 import {unifiedBackupHTML,bindUnifiedBackup} from './unified-backup.js';
 import {dailyHivesHTML} from './daily-hives.js';
@@ -56,3 +57,6 @@ let shownDate=date();setInterval(()=>{const current=date();if(current!==shownDat
 
 bindSaveStatus(()=>state);observeLocalization(document.querySelector('main'));observeLocalization(document.querySelector('#modal'));render();notifyDue(state);
 navigator.serviceWorker?.addEventListener('message',e=>{if(e.data?.page==='calendar'){page='calendar';render()}});if(location.hash==='#calendar'){page='calendar';render()}
+
+function openLinkedHive(){const id=hiveFromHash(location.hash);if(!id)return;document.querySelector('#modal').close();page='hives';render();const button=[...document.querySelectorAll('[data-hive]')].find(b=>b.dataset.hive===id);if(button)button.click();else{const notice=document.createElement('p');notice.className='notice';notice.setAttribute('role','status');notice.textContent=translation('Улей не найден в журнале этого устройства. Войдите и выполните обмен в настройках или восстановите резервную копию, затем снова откройте ссылку.',currentLanguage());document.querySelector('#screen').prepend(notice)}}
+window.addEventListener('hashchange',openLinkedHive);openLinkedHive();
