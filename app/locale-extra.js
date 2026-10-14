@@ -174,3 +174,23 @@ extraRows.push(
 extraRows.push(['Открыть календарь','Open calendar','打开日历','कैलेंडर खोलें','Abrir calendario','افتح التقويم','Abrir calendário','ক্যালেন্ডার খুলুন','Ouvrir le calendrier','Kalender öffnen']);
 
 extraRows.push(['Закрыть','Close','关闭','बंद करें','Cerrar','إغلاق','Fechar','বন্ধ করুন','Fermer','Schließen'],['Открытые задачи','Open tasks','未完成任务','अधूरे कार्य','Tareas pendientes','المهام المفتوحة','Tarefas pendentes','অসমাপ্ত কাজ','Tâches ouvertes','Offene Aufgaben']);
+
+extraRows.push(
+["Ульев в журнале", "Hives in journal", "日志中的蜂箱", "जर्नल में छत्ते", "Colmenas en diario", "خلايا في السجل", "Colmeias no diário", "জার্নলে বাক্স", "Ruches du journal", "Beuten im Tagebuch"],
+["Сегодня", "Today", "今天", "आज", "Hoy", "اليوم", "Hoje", "আজ", "Aujourd’hui", "Heute"],
+["План по ульям", "Plan by hive", "按蜂箱计划", "छत्ते अनुसार योजना", "Plan por colmena", "خطة حسب الخلية", "Plano por colmeia", "বাক্স অনুযায়ী পরিকল্পনা", "Plan par ruche", "Plan je Beute"],
+["Быстрый осмотр", "Quick inspection", "快速检查", "त्वरित निरीक्षण", "Inspección rápida", "فحص سريع", "Inspeção rápida", "দ্রুত পরিদর্শন", "Visite rapide", "Schnelle Durchsicht"],
+["История семьи", "Colony history", "蜂群历史", "कॉलोनी इतिहास", "Historia de colonia", "تاريخ الطائفة", "Histórico da colônia", "কলোনির ইতিহাস", "Historique de colonie", "Volksgeschichte"],
+["Следующая задача", "Next task", "下一任务", "अगला कार्य", "Próxima tarea", "المهمة التالية", "Próxima tarefa", "পরের কাজ", "Tâche suivante", "Nächste Aufgabe"],
+["Последняя запись", "Last entry", "上次记录", "पिछली प्रविष्टि", "Última entrada", "آخر سجل", "Último registro", "শেষ নথি", "Dernière entrée", "Letzter Eintrag"],
+["нет", "none", "无", "नहीं", "ninguna", "لا يوجد", "nenhum", "নেই", "aucune", "keiner"],
+["Состояние матки", "Queen observations", "蜂王观察", "रानी का अवलोकन", "Observación de reina", "ملاحظات الملكة", "Observação da rainha", "রানির পর্যবেক্ষণ", "Observation de reine", "Königinnenbeobachtung"],
+["Не проверено", "Not checked", "未检查", "नहीं जाँचा", "Sin comprobar", "لم يفحص", "Não verificado", "পরীক্ষা হয়নি", "Non vérifié", "Nicht geprüft"],
+["Матка замечена", "Queen seen", "见到蜂王", "रानी देखी", "Reina vista", "شوهدت الملكة", "Rainha vista", "রানি দেখা গেছে", "Reine vue", "Königin gesehen"],
+["Замечены яйца", "Eggs seen", "见到卵", "अंडे देखे", "Huevos vistos", "شوهد البيض", "Ovos vistos", "ডিম দেখা গেছে", "Œufs vus", "Eier gesehen"],
+["Признаки не найдены · не диагноз", "No signs seen · not a diagnosis", "未见迹象 · 非诊断", "संकेत नहीं मिले · निदान नहीं", "Sin indicios · no es diagnóstico", "لا علامات · ليس تشخيصاً", "Sem sinais · não é diagnóstico", "লক্ষণ নেই · রোগনির্ণয় নয়", "Aucun signe · pas un diagnostic", "Keine Zeichen · keine Diagnose"],
+["Даты выбраны вами. Показатели отражают последнюю запись, а не текущее состояние семьи.", "You choose the dates. Measurements show the last entry, not the colony’s current condition.", "日期由您选择。指标来自上次记录，不代表当前状态。", "तारीख आप चुनते हैं। आँकड़े पिछली प्रविष्टि के हैं, वर्तमान दशा के नहीं।", "Tú eliges las fechas. Los datos son del último registro, no del estado actual.", "تختار التواريخ. القياسات من آخر سجل وليست الحالة الحالية.", "Você escolhe as datas. Os dados são do último registro, não da situação atual.", "তারিখ আপনার পছন্দ। মাপ শেষ নথির, বর্তমান অবস্থা নয়।", "Vous choisissez les dates. Les mesures viennent de la dernière entrée, pas de l’état actuel.", "Sie wählen Termine. Werte stammen vom letzten Eintrag, nicht vom aktuellen Zustand."],
+["Черновик сохраняется на устройстве. Фото выберите заново; в облако черновик не отправляется.", "Draft stays on this device. Select photos again; drafts are not sent to the cloud.", "草稿留在此设备，照片需重新选择，草稿不上传云端。", "मसौदा उपकरण पर है। फोटो फिर चुनें; मसौदा क्लाउड नहीं जाता।", "Borrador en este dispositivo. Selecciona fotos otra vez; no se envía a la nube.", "المسودة بالجهاز. اختر الصور مجدداً؛ لا ترسل للسحابة.", "Rascunho neste dispositivo. Selecione fotos de novo; não vai à nuvem.", "খসড়া এই যন্ত্রে। ছবি আবার বেছে নিন; ক্লাউডে যায় না।", "Brouillon sur cet appareil. Resélectionnez les photos ; aucun envoi au cloud.", "Entwurf auf diesem Gerät. Fotos erneut wählen; kein Cloud-Versand."],
+["Не удалось сохранить черновик", "Could not save draft", "无法保存草稿", "मसौदा नहीं सहेजा", "No se guardó el borrador", "تعذر حفظ المسودة", "Não foi possível salvar rascunho", "খসড়া রাখা যায়নি", "Brouillon non enregistré", "Entwurf nicht gespeichert"],
+["Проверьте состояние матки", "Check queen observations", "检查蜂王观察", "रानी अवलोकन जाँचें", "Revisa observaciones de reina", "تحقق من ملاحظات الملكة", "Verifique observação da rainha", "রানির তথ্য দেখুন", "Vérifiez l’observation de reine", "Königinnenbeobachtung prüfen"]
+);

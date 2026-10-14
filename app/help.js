@@ -1,3 +1,4 @@
+import {sectionLocales} from './section-locales.js';
 import {localizedGuide} from './guide-locales.js';
 import {translation} from './presentation.js';
 import {floraDetails,beeDetails} from './knowledge.js';
@@ -16,4 +17,4 @@ export const sectionHelp={
  plans:['Что означает цена в долларах','Месяц стоит $10, год — $100; экономия против 12 месяцев составляет $20. Сумма в токенах зависит от проверяемого рыночного курса. Комиссия Solana оплачивается отдельно. Счета фиксируются на 15 минут; приём денег сейчас выключен, потому что платные функции ещё не завершены.'],
  settings:['Локальная запись, облако и резервная копия','Локальная копия живёт в браузере. Облачная привязана к аккаунту и обновляется вручную. Перед первым обменом экспортируйте локальные данные. Синхронизация объединяет независимые записи; при конфликте одной записи вы выбираете версию. Фото хранятся отдельно на устройстве и требуют своей резервной копии.']
 };
-export function sectionHTML(page){const help=sectionHelp[page];return help?`<details class="section-explainer"><summary>${esc(help[0])}</summary><p>${esc(help[1])}</p></details>`:'';}
+export function sectionHTML(page,lang='ru'){const help=sectionLocales[lang]?.[page]||sectionHelp[page];return help?`<details class="section-explainer"><summary>${esc(help[0])}</summary><p>${esc(help[1])}</p></details>`:'';}

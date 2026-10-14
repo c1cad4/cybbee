@@ -16,6 +16,10 @@ assert.equal((await call('/api/journal/sync',{revision:15,changes:[{collection:'
 assert.equal((await (await call('/api/journal')).json()).journal.breeding[0].name,'Queen batch');
 for(const patch of [{ageHours:25},{kind:'drone'},{emergedDate:'2026-02-30'},{status:'fake'}])assert.equal((await call('/api/journal/sync',{revision:16,changes:[{collection:'breeding',id:'project1',value:{...breeding,...patch}}]})).status,400);
 assert.equal((await call('/api/journal',null,'bob')).status,200);assert.equal((await (await call('/api/journal',null,'bob')).json()).journal,null);
+const observation={id:'queen-observation',date:'2026-10-14',text:'Observed eggs',hiveId:'h1',queenStatus:'eggs'};
+assert.equal((await call('/api/journal/sync',{revision:16,changes:[{collection:'notes',id:observation.id,value:observation}]})).status,200);
+assert.equal((await (await call('/api/journal')).json()).journal.notes.find(n=>n.id===observation.id).queenStatus,'eggs');
+assert.equal((await call('/api/journal/sync',{revision:17,changes:[{collection:'notes',id:observation.id,value:{...observation,queenStatus:'diagnosed'}}]})).status,400);
 // An old browser cannot overwrite the new merged journal with a snapshot.
 assert.equal((await call('/api/journal',{revision:13,journal:{hives:[],tasks:[],notes:[]}},'alice','PUT')).status,409);
 }finally{await rm(root,{recursive:true,force:true})}});

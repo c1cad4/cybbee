@@ -1,3 +1,4 @@
+import {uiEnglish} from './ui-english.js';
 import {extraRows} from './locale-extra.js';
 export function seasonFor(month,hemisphere='north',override='auto'){
  if(['spring','summer','autumn','winter','tropical'].includes(override))return override;
@@ -33,5 +34,10 @@ const rows=[
 ];
 rows.push(...extraRows);
 export function resolveLanguage(requested){const base=(requested||'en').toLowerCase().split(/[-_]/)[0];return languages.some(([code])=>code===base)?base:'en';}
-export function translation(text,lang){const index=languages.findIndex(([code])=>code===resolveLanguage(lang));const row=rows.find(row=>row[0]===text);return row?row[index]:text;}
-export function translateUI(root,lang){const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const node of nodes){if(node.parentElement?.closest('[data-user-text],script,style'))continue;const text=node.textContent.trim();const translated=translation(text,lang);if(translated!==text)node.textContent=node.textContent.replace(text,translated);}}
+const englishFragments=Object.entries(uiEnglish).sort((a,b)=>b[0].length-a[0].length).map(([key,value])=>[new RegExp('(?<![\\p{L}\\p{N}])'+key.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{N}])','gu'),value]);
+function translateValue(text,lang){const index=languages.findIndex(([code])=>code===resolveLanguage(lang));const row=rows.find(row=>row[0]===text);if(row)return row[index];if(resolveLanguage(lang)!=='en')return text;if(uiEnglish[text])return uiEnglish[text];if(!/[А-Яа-яЁё]/.test(text))return text;let translated=text;for(const [source,target]of englishFragments)translated=translated.replace(source,target);return translated;}
+const translationCache=new Map();
+export function translation(text,lang){const key=resolveLanguage(lang)+'|'+text;if(translationCache.has(key))return translationCache.get(key);const value=translateValue(text,lang);if(translationCache.size>=2000)translationCache.clear();translationCache.set(key,value);return value;}
+export function translateUI(root,lang){const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);for(const node of nodes){if(node.parentElement?.closest('[data-user-text],script,style'))continue;const text=node.textContent.trim();const translated=translation(text,lang);if(translated!==text)node.textContent=node.textContent.replace(text,translated);}for(const element of root.querySelectorAll('[placeholder],[aria-label],[title],[alt]')){if(element.closest('[data-user-text],[lang=ru][data-original]'))continue;for(const name of ['placeholder','aria-label','title','alt']){const value=element.getAttribute(name);if(value)element.setAttribute(name,translation(value,lang))}}}
+
+export function observeLocalization(root){let queued=false;const observer=new MutationObserver(()=>{if(queued)return;queued=true;queueMicrotask(()=>{queued=false;translateUI(root,document.documentElement.lang)})});observer.observe(root,{subtree:true,childList:true,characterData:true});return observer;}

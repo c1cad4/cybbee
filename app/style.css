@@ -22,3 +22,5 @@ dialog>form{position:sticky;top:-28px;z-index:3;display:flex;justify-content:fle
 .breeding-project{padding:1.2rem;border:1px solid #dfcfa9;border-radius:18px;background:#fffdf6;margin-block:1rem}.breeding-project .editor{padding:0;margin-top:1rem}.breeding-panel .notice{font-size:.9rem}.guide-original{margin-top:1rem}
 @media(max-width:1100px){.wheel-layout{grid-template-columns:1fr;gap:16px}.calendar-wheel{max-width:480px}}
 .breeding-project .row>label{flex:1;min-width:160px}.breeding-project input,.breeding-project select,.breeding-project textarea{width:100%;min-width:0}.guide-original>div{border-top:1px solid #dfcfa9;margin-top:16px;padding-top:16px}
+
+.daily-hives{margin-block:24px}.daily-hive h3{font-size:22px;margin-top:0}.daily-hive .row{margin-block:12px}.daily-hive .pill{white-space:normal}.daily-hive button{min-height:44px}#observation-form input,#observation-form select,#observation-form textarea{width:100%;min-width:0}
