@@ -288,3 +288,32 @@ Object.assign(uiEnglish,{
 'Источник определения и вопросы местному специалисту.':'Identification source and questions for a local expert.',
 'Открыть карту находок ↗':'Open occurrence map ↗'
 });
+Object.assign(uiEnglish,{
+'Один файл содержит журнал, проекты вывода и фотографии этого устройства. Книги, черновики и точная точка карты в него не входят.':'One file contains the journal, rearing projects and photos on this device. Books, drafts and the precise map point are excluded.',
+'Проверка единой копии':'Review combined backup',
+'Ульи':'Hives','Записи':'Entries','Фото':'Photos',
+'Копия объединяется с журналом. Существующие записи и фото сохраняются. Файл обрабатывается на устройстве.':'The backup is merged with your journal. Existing entries and photos remain. The file is processed on this device.',
+'Также восстановить регион, язык и настройки сезонов':'Also restore region, language and season settings',
+'Объединить копию':'Merge backup',
+'Готовим единую копию…':'Preparing combined backup…',
+'Копия скачана. Фото':'Backup downloaded. Photos',
+'Фото без записей исключены':'Unlinked photos excluded',
+'Восстановление отменено':'Restore cancelled',
+'Проверяем фотографии…':'Checking photos…',
+'Единая копия восстановлена':'Combined backup restored',
+'Неверная единая копия CybBee':'Invalid CybBee combined backup',
+'В копии есть фото без записи журнала':'Backup contains photos without journal entries',
+'Более трёх фото у одной записи':'More than three photos for one entry',
+'Фото с одинаковым ID различаются. Копия не применена.':'Photos with the same ID differ. Backup was not applied.',
+'Единая копия превышает 70 МБ':'Combined backup exceeds 70 MB',
+'Выберите единую копию до 70 МБ':'Choose a combined backup up to 70 MB',
+'Журнал изменился. Повторите восстановление.':'The journal changed. Repeat the restore.',
+'Не удалось сохранить объединённый журнал':'Could not save the merged journal',
+'Фото сохранены, но журнал не применён. Повторите импорт из файла.':'Photos were saved, but the journal was not applied. Repeat import from the file.',
+'Превышен лимит фото: 100 всего и 3 на запись':'Photo limit exceeded: 100 total and 3 per entry',
+'Фото изменились или хранилище недоступно. Повторите восстановление.':'Photos changed or storage is unavailable. Repeat the restore.'
+});
+
+Object.assign(uiEnglish,{'Статус относится к журналу. Фотографии обмениваются отдельно.':'Status applies to the journal. Photos are transferred separately.'});
+
+Object.assign(uiEnglish,{'Фото превышает 500 КБ':'Photo exceeds 500 KB'});
