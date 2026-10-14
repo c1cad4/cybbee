@@ -57,3 +57,5 @@ header{flex-wrap:wrap;gap:12px}.save-state{font-size:12px;letter-spacing:0;max-w
 .expanded-reading{margin-top:24px;padding-top:12px;border-top:2px solid #e5c580}.expanded-reading p{line-height:1.8;max-width:70ch}.expanded-reading h3{margin-top:24px;color:#72512a}.expanded-reading .source-note ul{padding-inline-start:20px}.expanded-reading .source-note li{margin:8px 0}
 
 .weather-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;max-height:420px;overflow:auto}.weather-slots article{padding:14px;background:#fff2cc;border:1px solid #e7cd90;border-radius:16px;display:flex;flex-direction:column;gap:8px}.weather-slots strong{font-size:24px;color:#75522a}.weather-slots span{font-size:12px}.weather-panel details{margin-bottom:16px}.weather-panel label{margin:12px 0}.weather-panel summary{margin-bottom:12px}
+
+.voice-draft{padding:18px;margin:16px 0;border:1px solid #dfc081;border-radius:16px;background:#fff5da}.voice-draft [data-voice-interim]{min-height:20px}.voice-draft textarea{min-height:110px}.voice-draft button:disabled{opacity:.55}
