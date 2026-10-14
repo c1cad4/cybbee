@@ -29,6 +29,7 @@ assert.equal((await seasonCall('/api/journal/sync',{revision:1,changes:[{collect
 assert.equal((await seasonCall('/api/journal/sync',{revision:1,changes:[{collection:'queens',id:'queen1',value:{...passport,date:'2026-02-30'}}]})).status,400);
 assert.equal((await seasonCall('/api/journal/sync',{revision:1,changes:[{collection:'notes',id:'linked',value:{id:'linked',hiveId:'h1',queenId:'queen1',date:'2026-06-01',text:'Eggs observed',queenStatus:'eggs'}}]})).status,200);
 assert.equal((await seasonCall('/api/journal/sync',{revision:2,changes:[{collection:'notes',id:'bad-link',value:{id:'bad-link',hiveId:'h2',queenId:'queen1',date:'2026-06-01',text:'Wrong hive'}}]})).status,400);
+assert.equal((await call('/api/journal/sync',{revision:19,journalScope:'wrong-account',changes:[{collection:'notes',id:'wrong-scope',value:{id:'wrong-scope',date:'2026-10-14',text:'Do not send'}}]},'scope-test')).status,403);
 // An old browser cannot overwrite the new merged journal with a snapshot.
 assert.equal((await call('/api/journal',{revision:13,journal:{hives:[],tasks:[],notes:[]}},'alice','PUT')).status,409);
 }finally{await rm(root,{recursive:true,force:true})}});
