@@ -11,6 +11,11 @@ for(let revision=1;revision<13;revision++){r=await call('/api/journal/sync',{rev
 const history=execute([{sql:'SELECT revision,payload FROM bee_journal_history WHERE owner=? ORDER BY revision',values:['alice']}])[0].results;assert.equal(history.length,10);assert.equal(history[0].revision,3);assert.equal(JSON.parse(history.at(-1).payload).hives[0].name,'Version 12');const journal=await (await call('/api/journal')).json();assert.equal(journal.revision,13);
 const race=await Promise.all(['a','b'].map(id=>call('/api/journal/sync',{revision:13,changes:[{collection:'notes',id,value:{id,date:'2026-10-13',text:'Concurrent '+id}}]})));assert.deepEqual(race.map(r=>r.status).sort(),[200,409]);
 const bloom=await call('/api/journal/sync',{revision:14,changes:[{collection:'flowerings',id:'bloom',value:{id:'bloom',plant:'Липа',region:'Приморье',date:'2026-07-01',end:'2026-07-15',text:'Наблюдение'}}]});assert.equal(bloom.status,200);assert.equal((await (await call('/api/journal')).json()).journal.flowerings[0].plant,'Липа');assert.equal((await call('/api/journal/sync',{revision:15,changes:[{collection:'flowerings',id:'bad',value:{id:'bad',plant:'Липа',region:'Приморье',date:'2026-07-01',end:'2026-06-01',text:''}}]})).status,400);
+const breeding={id:'project1',name:'Queen batch',date:'2026-10-13',kind:'queen',anchor:'graft',ageHours:24,hiveId:'h1',status:'active',emergedDate:'',text:''};
+assert.equal((await call('/api/journal/sync',{revision:15,changes:[{collection:'breeding',id:breeding.id,value:breeding}]})).status,200);
+assert.equal((await (await call('/api/journal')).json()).journal.breeding[0].name,'Queen batch');
+for(const patch of [{ageHours:25},{kind:'drone'},{emergedDate:'2026-02-30'},{status:'fake'}])assert.equal((await call('/api/journal/sync',{revision:16,changes:[{collection:'breeding',id:'project1',value:{...breeding,...patch}}]})).status,400);
+assert.equal((await call('/api/journal',null,'bob')).status,200);assert.equal((await (await call('/api/journal',null,'bob')).json()).journal,null);
 // An old browser cannot overwrite the new merged journal with a snapshot.
 assert.equal((await call('/api/journal',{revision:13,journal:{hives:[],tasks:[],notes:[]}},'alice','PUT')).status,409);
 }finally{await rm(root,{recursive:true,force:true})}});
