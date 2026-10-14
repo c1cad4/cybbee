@@ -1,3 +1,4 @@
+import {readingEnglish} from './reading-content.js';
 import {floraDetails,beeDetails} from './knowledge.js';
 // UI wording. User content and explicitly marked Russian originals are excluded by the renderer.
 const lines=`На фото|Pictured
@@ -318,3 +319,5 @@ Object.assign(uiEnglish,{
 Object.assign(uiEnglish,{'Статус относится к журналу. Фотографии обмениваются отдельно.':'Status applies to the journal. Photos are transferred separately.'});
 
 Object.assign(uiEnglish,{'Фото превышает 500 КБ':'Photo exceeds 500 KB'});
+
+Object.assign(uiEnglish,readingEnglish);

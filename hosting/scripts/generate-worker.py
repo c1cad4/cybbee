@@ -1,5 +1,5 @@
 from pathlib import Path
-import json,base64
+import json,base64,gzip
 root=Path(__file__).resolve().parents[1]
 app=root/'app'
 if not app.exists():app=root.parent/'app'
@@ -8,13 +8,13 @@ binary={}
 for p in app.rglob('*'):
  if p.is_file() and 'tests' not in p.parts and p.name!='package.json':
   path='/'+str(p.relative_to(app))
-  if p.suffix in {'.bcmap','.ttf','.pfb','.wasm','.otf','.bin'}:binary[path]=base64.b64encode(p.read_bytes()).decode('ascii')
+  if p.suffix in {'.bcmap','.ttf','.pfb','.wasm','.otf','.bin'}:binary[path]=base64.b64encode(gzip.compress(p.read_bytes(),mtime=0)).decode('ascii')
   else:
    try:assets[path]=p.read_text()
-   except UnicodeDecodeError:binary[path]=base64.b64encode(p.read_bytes()).decode('ascii')
+   except UnicodeDecodeError:binary[path]=base64.b64encode(gzip.compress(p.read_bytes(),mtime=0)).decode('ascii')
 api=(app/'season-records.js').read_text().replace('export ','')+'\n'+(root/'worker/api.js').read_text().replace("import {validateQueenRecord,validateExpenseRecord,validateSeasonLinks} from '../app/season-records.js';\n",'').replace('export function validateTransfer','function validateTransfer').replace('export async function api','async function api')
 footer="""
 const TYPES={mjs:'application/javascript; charset=utf-8',wasm:'application/wasm',bcmap:'application/octet-stream',pfb:'application/octet-stream',ttf:'font/ttf',js:'application/javascript; charset=utf-8',css:'text/css; charset=utf-8',html:'text/html; charset=utf-8',svg:'image/svg+xml',webmanifest:'application/manifest+json'};
-export default {async fetch(request,env){const url=new URL(request.url);if(url.pathname.startsWith('/api/'))return api(request,env);const path=url.pathname==='/'?'/index.html':url.pathname;const body=ASSETS[path];if(body===undefined&&BINARY[path]===undefined)return new Response('Not found',{status:404});return new Response(body===undefined?Uint8Array.from(atob(BINARY[path]),c=>c.charCodeAt(0)):body,{headers:{'Content-Type':TYPES[path.split('.').pop()]||'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','Cache-Control':path==='/sw.js'?'no-cache':'no-cache'}})}};
+export default {async fetch(request,env){const url=new URL(request.url);if(url.pathname.startsWith('/api/'))return api(request,env);const path=url.pathname==='/'?'/index.html':url.pathname;const body=ASSETS[path];if(body===undefined&&BINARY[path]===undefined)return new Response('Not found',{status:404});return new Response(body===undefined?new Response(Uint8Array.from(atob(BINARY[path]),c=>c.charCodeAt(0))).body.pipeThrough(new DecompressionStream('gzip')):body,{headers:{'Content-Type':TYPES[path.split('.').pop()]||'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin','Cache-Control':path==='/sw.js'?'no-cache':'no-cache'}})}};
 """
 (root/'worker/index.js').write_text('const ASSETS='+json.dumps(assets,ensure_ascii=False)+';\nconst BINARY='+json.dumps(binary)+';\n'+api+'\n'+footer)

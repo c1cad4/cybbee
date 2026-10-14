@@ -53,3 +53,5 @@ header{flex-wrap:wrap;gap:12px}.save-state{font-size:12px;letter-spacing:0;max-w
 .calendar-day b{font-size:18px}.calendar-day small{font-size:12px;padding:1px 4px;line-height:18px}
 @media(max-width:550px){.month-grid{gap:5px 2px}.month-grid .calendar-day{height:62px;min-height:62px}.calendar-day b{font-size:15px}.calendar-day small{font-size:10px;line-height:14px;min-width:16px;padding:0 2px}}
 .bee-photo{margin:0 0 16px}.bee-photo img{display:block;width:100%;height:180px;object-fit:contain;background:#fff3d1;border-radius:16px;border:1px solid #e4c37d}.bee-photo figcaption{font-size:11px;line-height:1.5;margin-top:6px;color:#65513a}.bee-photo figcaption a{color:inherit}.bee-photo-detail img{height:auto;max-height:420px}.bee-photo figcaption span{display:block}
+
+.expanded-reading{margin-top:24px;padding-top:12px;border-top:2px solid #e5c580}.expanded-reading p{line-height:1.8;max-width:70ch}.expanded-reading h3{margin-top:24px;color:#72512a}.expanded-reading .source-note ul{padding-inline-start:20px}.expanded-reading .source-note li{margin:8px 0}

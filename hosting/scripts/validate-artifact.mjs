@@ -1,3 +1,4 @@
+import { gzipSync } from "node:zlib";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -12,6 +13,7 @@ const [source, manifest] = await Promise.all([
   readFile(manifestPath, "utf8"),
 ]);
 JSON.parse(manifest);
+assert.ok(gzipSync(source).length < 3 * 1024 * 1024, "Worker exceeds the 3 MiB deployment budget");
 
 // A data URL forces ESM parsing even though the generated output has no package.json.
 const moduleUrl = `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`;
