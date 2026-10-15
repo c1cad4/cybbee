@@ -1,0 +1,43 @@
+// Order: ru, en, zh, hi, es, ar, pt, bn, fr, de.
+export const technologyRows=[
+['Датчики улья','Hive sensors','蜂箱传感器','छत्ते के सेंसर','Sensores de la colmena','مستشعرات الخلية','Sensores da colmeia','মৌচাকের সেন্সর','Capteurs de ruche','Stock-Sensoren'],
+['Показатель','Metric','指标','माप','Medida','القياس','Medida','পরিমাপ','Mesure','Messwert'],
+['Температура','Temperature','温度','तापमान','Temperatura','درجة الحرارة','Temperatura','তাপমাত্রা','Température','Temperatur'],
+['Влажность','Humidity','湿度','आर्द्रता','Humedad','الرطوبة','Umidade','আর্দ্রতা','Humidité','Luftfeuchte'],
+['Вес улья','Hive weight','蜂箱重量','छत्ते का वजन','Peso de la colmena','وزن الخلية','Peso da colmeia','মৌচাকের ওজন','Poids de la ruche','Stockgewicht'],
+['Нижний предел','Lower limit','下限','निचली सीमा','Límite inferior','الحد الأدنى','Limite inferior','নিম্ন সীমা','Limite basse','Untergrenze'],
+['Верхний предел','Upper limit','上限','ऊपरी सीमा','Límite superior','الحد الأعلى','Limite superior','ঊর্ধ্ব সীমা','Limite haute','Obergrenze'],
+['Сохранить пределы','Save limits','保存限值','सीमाएँ सहेजें','Guardar límites','حفظ الحدود','Salvar limites','সীমা সংরক্ষণ','Enregistrer les limites','Grenzen speichern'],
+['Подключить Bluetooth-датчик','Connect Bluetooth sensor','连接蓝牙传感器','Bluetooth सेंसर जोड़ें','Conectar sensor Bluetooth','توصيل مستشعر Bluetooth','Conectar sensor Bluetooth','Bluetooth সেন্সর যুক্ত করুন','Connecter un capteur Bluetooth','Bluetooth-Sensor verbinden'],
+['Отключить датчик','Disconnect sensor','断开传感器','सेंसर हटाएँ','Desconectar sensor','فصل المستشعر','Desconectar sensor','সেন্সর বিচ্ছিন্ন করুন','Déconnecter le capteur','Sensor trennen'],
+['Импорт CSV / JSON','Import CSV / JSON','导入 CSV / JSON','CSV / JSON आयात','Importar CSV / JSON','استيراد CSV / JSON','Importar CSV / JSON','CSV / JSON আমদানি','Importer CSV / JSON','CSV / JSON importieren'],
+['Добавить проверенные показания','Add validated readings','添加已验证读数','जाँचे गए माप जोड़ें','Añadir lecturas validadas','إضافة القراءات المتحققة','Adicionar leituras validadas','যাচাইকৃত মাপ যোগ করুন','Ajouter les mesures validées','Geprüfte Messwerte hinzufügen'],
+['Экспорт показаний','Export readings','导出读数','माप निर्यात','Exportar lecturas','تصدير القراءات','Exportar leituras','মাপ রপ্তানি','Exporter les mesures','Messwerte exportieren'],
+['Формат CSV','CSV format','CSV 格式','CSV प्रारूप','Formato CSV','تنسيق CSV','Formato CSV','CSV বিন্যাস','Format CSV','CSV-Format'],
+['Показаний пока нет','No readings yet','暂无读数','अभी कोई माप नहीं','Sin lecturas','لا توجد قراءات بعد','Sem leituras','এখনও মাপ নেই','Aucune mesure','Noch keine Messwerte'],
+['Пределы не заданы','Limits not set','未设置限值','सीमाएँ तय नहीं','Límites sin definir','لم تحدد الحدود','Limites não definidos','সীমা নির্ধারিত নয়','Limites non définies','Keine Grenzen festgelegt'],
+['Последний замер вне выбранных пределов','Latest reading outside limits','最新读数超出限值','नवीनतम माप सीमा से बाहर','Última lectura fuera de límites','آخر قراءة خارج الحدود','Última leitura fora dos limites','সর্বশেষ মাপ সীমার বাইরে','Dernière mesure hors limites','Letzter Messwert außerhalb der Grenzen'],
+['Последний замер в выбранных пределах','Latest reading within limits','最新读数在限值内','नवीनतम माप सीमा में','Última lectura dentro de límites','آخر قراءة ضمن الحدود','Última leitura dentro dos limites','সর্বশেষ মাপ সীমার মধ্যে','Dernière mesure dans les limites','Letzter Messwert innerhalb der Grenzen'],
+['Проверено строк','Validated rows','已验证行数','जाँची गई पंक्तियाँ','Filas validadas','الصفوف المتحققة','Linhas validadas','যাচাইকৃত সারি','Lignes validées','Geprüfte Zeilen'],
+['Датчик отключён.','Sensor disconnected.','传感器已断开。','सेंसर हट गया।','Sensor desconectado.','تم فصل المستشعر.','Sensor desconectado.','সেন্সর বিচ্ছিন্ন।','Capteur déconnecté.','Sensor getrennt.'],
+['Подключение отменено.','Connection cancelled.','已取消连接。','कनेक्शन रद्द।','Conexión cancelada.','أُلغي الاتصال.','Conexão cancelada.','সংযোগ বাতিল।','Connexion annulée.','Verbindung abgebrochen.'],
+['Сравнить фотографии','Compare photos','比较照片','तस्वीरें तुलना करें','Comparar fotos','مقارنة الصور','Comparar fotos','ছবি তুলনা করুন','Comparer les photos','Fotos vergleichen'],
+['Первый снимок','First photo','第一张照片','पहली तस्वीर','Primera foto','الصورة الأولى','Primeira foto','প্রথম ছবি','Première photo','Erstes Foto'],
+['Второй снимок','Second photo','第二张照片','दूसरी तस्वीर','Segunda foto','الصورة الثانية','Segunda foto','দ্বিতীয় ছবি','Deuxième photo','Zweites Foto'],
+['Фотографий пока нет','No photos yet','暂无照片','अभी तस्वीरें नहीं','Sin fotos','لا توجد صور بعد','Sem fotos','এখনও ছবি নেই','Aucune photo','Noch keine Fotos'],
+['Ответы по справочнику','Reference search','资料搜索','संदर्भ खोज','Buscar en la guía','البحث في الدليل','Busca no guia','তথ্যসূত্র অনুসন্ধান','Recherche documentaire','Nachschlagewerk durchsuchen'],
+['Что хотите узнать','What would you like to know','您想了解什么','क्या जानना चाहते हैं','Qué quieres saber','ماذا تريد أن تعرف','O que deseja saber','কী জানতে চান','Que souhaitez-vous savoir','Was möchten Sie wissen'],
+['Найти в справочнике','Search references','搜索资料','संदर्भ खोजें','Buscar referencias','البحث في المراجع','Buscar referências','তথ্যসূত্র খুঁজুন','Chercher dans le guide','Quellen suchen'],
+['Материалы для ответа ИИ','References for the AI answer','AI 回答参考资料','AI उत्तर के संदर्भ','Fuentes para la respuesta IA','مراجع إجابة الذكاء الاصطناعي','Fontes da resposta IA','AI উত্তরের তথ্যসূত্র','Sources de la réponse IA','Quellen für die KI-Antwort'],
+['Подходящих памяток не найдено. Уточните вопрос.','No matching guide. Refine your question.','未找到相关指南。请细化问题。','उपयुक्त मार्गदर्शिका नहीं मिली। प्रश्न स्पष्ट करें।','No hay guías coincidentes. Precisa la pregunta.','لم يوجد دليل مناسب. وضّح السؤال.','Nenhum guia correspondente. Refine a pergunta.','উপযুক্ত নির্দেশিকা নেই। প্রশ্ন স্পষ্ট করুন।','Aucun guide trouvé. Précisez la question.','Kein passender Leitfaden. Frage präzisieren.'],
+];
+// Detailed compatibility and error copy uses English fallback until reviewed translations arrive.
+const details=[
+['Показания хранятся отдельно на этом устройстве. Экспортируйте их отдельно. Датчик не определяет здоровье семьи.','Readings stay separately on this device. Export them separately. Sensors do not diagnose colony health.'],
+['Bluetooth: только Environmental Sensing, температура и влажность. Вес импортируется из CSV / JSON. Поддержка зависит от браузера.','Bluetooth: Environmental Sensing temperature and humidity only. Import weight via CSV / JSON. Support depends on the browser.'],
+['Импорт добавляет показания к открытому улью. Bluetooth сохраняет не чаще одного замера в минуту для каждого показателя. Уведомления видны только при открытой панели.','Imports belong to the open hive. Bluetooth stores at most one reading per minute per metric. Alerts appear only while this panel is open.'],
+['Снимки одного улья по датам. Сравнение не определяет болезни и не заменяет осмотр.','Photos of one hive by date. Comparison does not diagnose disease or replace inspection.'],
+['Работает без загрузки ИИ. Материалы выбираются из памяток CybBee; личный журнал не используется.','Works without downloading AI. Searches CybBee guides without using your private journal.'],
+['Показания сохранены на устройстве.','Readings saved on this device.'],['Неверные показания датчика','Invalid sensor readings'],['Неверный файл датчиков','Invalid sensor file'],['Неверные пределы','Invalid limits'],['Не удалось подключить датчик.','Could not connect sensor.'],['Bluetooth недоступен. Используйте импорт CSV.','Bluetooth unavailable. Use CSV import.'],['Датчик подключён. Показания сохраняются локально.','Sensor connected. Readings are saved locally.'],['Совместимых показаний не найдено.','No compatible readings found.'],['Не удалось открыть фотографии','Could not open photos'],['Лимит показаний: 5000. Сначала экспортируйте данные.','Reading limit: 5000. Export your data first.'],['В ответе есть неизвестная ссылка. Проверьте материалы.','The answer contains an unknown citation. Check the references.'],['Источники показаны ниже. Они не гарантируют точность каждого утверждения модели.','Sources are shown below. They do not guarantee every model claim is accurate.']
+];
+technologyRows.push(...details.map(([ru,en])=>[ru,...Array(9).fill(en)]));
