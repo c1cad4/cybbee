@@ -20,11 +20,31 @@ test('winter core guide is fully structured in every supported language without 
  }
 });
 test('untranslated long guides remain explicitly concise and their original is not opened automatically',()=>{
- const guide=guides.find(g=>g.id==='queen');const copy=localizedGuide(guide,'fr');assert.equal(copy.localizedSummary,true);const html=guideHTML(guide,'fr');assert.ok(html.includes(guideFullLabels.fr[6]));assert.ok(!html.includes('class="guide-original" open'));
+ const guide=guides.find(g=>g.id==='honey');const copy=localizedGuide(guide,'fr');assert.equal(copy.localizedSummary,true);const html=guideHTML(guide,'fr');assert.ok(html.includes(guideFullLabels.fr[6]));assert.ok(!html.includes('class="guide-original" open'));
 });
 test('flowering names cover all existing taxa and nine translated languages without changing reference months or user text',()=>{
  assert.deepEqual(Object.keys(floweringNames).sort(),floweringPlants.map(p=>p[1]).sort());
  for(const [name,latin]of floweringPlants){assert.equal(floweringNames[latin].length,9);assert.ok(floweringNames[latin].every(s=>s.trim()));assert.equal(floweringName(latin,'ru',name),name);assert.equal(floweringName(latin,'en-US'),floweringNames[latin][0]);}
  const state={region:'Мой регион',flowerings:[{id:'f',plant:'Моя ива',region:'Мой регион',date:'2026-10-15',text:'Моя запись'}]};
  const html=floweringHTML(state,'en');assert.ok(html.includes('Common snowdrop'));assert.ok(html.includes('Galanthus nivalis'));assert.ok(html.includes('Моя ива'));assert.ok(html.includes('Моя запись'));assert.ok(html.includes('data-user-text'));assert.ok(html.includes('RHS'));
+});
+import {guideCoverageCount} from '../guide-locales.js';
+import {pageIntros} from '../intro-copy.js';
+test('queen, Varroa and oxalic core translations preserve sections, references, scenarios and FAQ in all ten languages',()=>{
+ for(const id of ['queen','varroa','oxalic']){
+  const guide=guides.find(g=>g.id===id);
+  for(const [lang]of languages.filter(([lang])=>lang!=='ru')){
+   const copy=localizedGuide(guide,lang),html=guideHTML(guide,lang),main=html.split('<details class="guide-original">')[0];
+   assert.equal(copy.localizedFull,true,id+lang);assert.equal(copy.source,guide.source);assert.ok(copy.intro.length>45);
+   for(const field of ['sections','scenarios','checklist','faq'])assert.equal(copy[field].length,guide[field].length,id+lang+field);
+   assert.ok(copy.sections.every(s=>s.title&&s.text.length>50));assert.ok(copy.scenarios.every(r=>r.length===2&&r[0].trim().length>0&&r[1].length>10));assert.ok(copy.faq.every(r=>r.length===2&&r[0].trim().length>0&&r[1].length>10));
+   assert.ok(!/[А-Яа-яЁё]/.test(main),id+lang);assert.ok(main.includes(guide.source));assert.ok(!html.includes('class="guide-original" open'));
+  }
+ }
+});
+test('coverage is calculated from delivered articles, including normalized locales',()=>{
+ assert.equal(guideCoverageCount(guides,'ru'),13);assert.equal(guideCoverageCount(guides,'en-US'),13);
+ for(const [lang]of languages.filter(([lang])=>!['ru','en'].includes(lang)))assert.equal(guideCoverageCount(guides,lang),4,lang);
+ assert.equal(guideCoverageCount(guides.filter(g=>g.id!=='queen'),'de-DE'),3);
+ for(const row of pageIntros.learn)assert.equal(row.split('{count}').length,2);
 });

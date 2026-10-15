@@ -122,3 +122,5 @@ Honig, Hygiene und Rückverfolgbarkeit|Prüfen Sie vor der Ernte Vorräte und Ei
 };
 export const guideLocales=Object.fromEntries(Object.entries(content).map(([lang,lines])=>[lang,Object.fromEntries(lines.split('\n').map((line,i)=>{const [title,...steps]=line.split('|');return [guideOrder[i],{title,steps,intro:steps[0]}]}))]));
 export function localizedGuide(g,lang='ru'){const code=String(lang).toLowerCase().split(/[-_]/)[0],copy=guideLocales[code]?.[g.id],full=fullGuideLocales[code]?.[g.id];if(copy&&full)return {...g,...copy,...full,tag:'CybBee'};return copy?{...g,...copy,tag:'CybBee',sections:[],scenarios:[],checklist:[],faq:[],localizedSummary:true}:g;}
+
+export function guideCoverageCount(guides,language='ru'){const code=String(language).toLowerCase().split(/[-_]/)[0];return code==='ru'?guides.length:guides.filter(g=>fullGuideLocales[code]?.[g.id]).length;}
