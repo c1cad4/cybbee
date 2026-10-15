@@ -1,3 +1,4 @@
+import {releaseRows} from './release-locales.js';
 import {reliabilityRows} from './reliability-locales.js';
 import {deviceRows} from './device-locales.js';
 import {photoQueueRows} from './photo-queue-locales.js';
@@ -46,6 +47,7 @@ const rows=[
  ['Каждая семья заслуживает внимания','Every colony deserves care','每个蜂群都值得关爱','हर कॉलोनी को देखभाल चाहिए','Cada colonia merece cuidado','كل طائفة تستحق العناية','Cada colônia merece cuidado','প্রতিটি কলোনির যত্ন প্রয়োজন','Chaque colonie mérite de l’attention','Jedes Volk verdient Fürsorge'],
  ['Установить','Install','安装','इंस्टॉल करें','Instalar','تثبيت','Instalar','ইনস্টল করুন','Installer','Installieren']
 ];
+rows.unshift(...releaseRows);
 rows.push(...reliabilityRows,...deviceRows,...photoQueueRows,...technologyRows,...voiceRows,...weatherRows,...apiaryRows,...hiveRows,...communityRows,...mapRows,...settingsRows,...extraRows,...seasonRows,...foundationRows);
 export function resolveLanguage(requested){const base=(requested||'en').toLowerCase().split(/[-_]/)[0];return languages.some(([code])=>code===base)?base:'en';}
 const englishFragments=Object.entries(uiEnglish).sort((a,b)=>b[0].length-a[0].length).map(([key,value])=>[new RegExp('(?<![\\p{L}\\p{N}])'+key.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{N}])','gu'),value]);

@@ -3,7 +3,7 @@ import {validateQueenRecord,validateExpenseRecord,validateSeasonLinks} from '../
 const RECIPIENT='AHBz386tP36ZrABN7STzxV66u1f7CwnaqrFBnevb4ff8',MINT='9QLCEL7Xo9VTwgBeAYU1PWX7JJ8joKxQCYw3msjUpump',SOL='So11111111111111111111111111111111111111112';
 const TOKEN='TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',SYSTEM='11111111111111111111111111111111';
 const PLANS={monthly:10,yearly:100};
-const now=()=>Math.floor(Date.now()/1000),json=(value,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store'}});
+const now=()=>Math.floor(Date.now()/1000),json=(value,status=200)=>Response.json(value,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 function fail(message,status=400){const e=new Error(message);e.status=status;throw e}
 function identity(request){const id=request.headers.get('oai-authenticated-user-id');if(!id)fail('Для этого действия войдите через ChatGPT',401);return id}
 const readBuckets=new Map(),quoteCache=new Map(),quoteFlights=new Map();
@@ -21,6 +21,36 @@ async function buildQuote(env,plan,asset){if(!Object.hasOwn(PLANS,plan)||!['sol'
 async function quote(env,plan,asset){if(!Object.hasOwn(PLANS,plan)||!['sol','cicada'].includes(asset))fail('Неверный тариф или токен');const key=plan+':'+asset,cached=quoteCache.get(key);if(cached&&Date.now()-cached.stored<30000)return {...cached.value,enabled:env.CHECKOUT_ENABLED==='1'};if(!quoteFlights.has(key))quoteFlights.set(key,buildQuote(env,plan,asset).then(value=>{quoteCache.set(key,{stored:Date.now(),value});return value}).finally(()=>quoteFlights.delete(key)));return {...await quoteFlights.get(key),enabled:env.CHECKOUT_ENABLED==='1'}}
 export function validateTransfer(tx,invoice){if(!tx||!tx.meta||tx.meta.err!==null)fail('Транзакция не найдена или завершилась ошибкой');if(!Number.isInteger(tx.blockTime)||tx.blockTime<invoice.created-30||tx.blockTime>invoice.expires)fail('Перевод вне срока счёта');const msg=tx.transaction.message;const keys=msg.accountKeys.map(k=>typeof k==='string'?k:k.pubkey);if(!keys.includes(invoice.reference))fail('Ссылка счёта не найдена в переводе');const units=BigInt(invoice.units);let ixs=[...msg.instructions];for(const group of tx.meta.innerInstructions||[])ixs.push(...group.instructions);if(invoice.asset==='sol'){const index=keys.indexOf(RECIPIENT);if(index<0||BigInt(tx.meta.postBalances[index])-BigInt(tx.meta.preBalances[index])<units)fail('Нужная сумма SOL не получена');if(ixs.some(ix=>ix.programId===SYSTEM&&ix.parsed?.type==='transfer'&&ix.parsed.info.destination===RECIPIENT&&BigInt(ix.parsed.info.lamports)>=units))return true;fail('Перевод SOL не найден')}
 const before=new Map((tx.meta.preTokenBalances||[]).map(b=>[b.accountIndex,b]));const destinations=[];for(const b of tx.meta.postTokenBalances||[]){if(b.mint!==MINT||b.owner!==RECIPIENT||b.uiTokenAmount.decimals!==invoice.decimals)continue;const pre=before.get(b.accountIndex);if(pre&&(pre.mint!==MINT||pre.owner!==RECIPIENT))continue;if(BigInt(b.uiTokenAmount.amount)-BigInt(pre?.uiTokenAmount.amount||'0')>=units)destinations.push(keys[b.accountIndex])}if(ixs.some(ix=>ix.programId===TOKEN&&['transfer','transferChecked'].includes(ix.parsed?.type)&&destinations.includes(ix.parsed.info.destination)&&BigInt(ix.parsed.info.amount||ix.parsed.info.tokenAmount?.amount||'0')>=units))return true;fail('Нужный перевод CicadaFarm не найден')}
+
+function publicInvoice(invoice){const params=new URLSearchParams({amount:invoice.amount,reference:invoice.reference,label:'CybBee Pro',message:'CybBee '+invoice.plan});if(invoice.asset==='cicada')params.set('spl-token',MINT);return {...invoice,url:'solana:'+RECIPIENT+'?'+params};}
+async function paymentInvoice(db,env,owner,p){
+ if(typeof p.requestId!=='string'||!/^[a-f0-9-]{36}$/.test(p.requestId))fail('Неверный идентификатор счёта');
+ const old=await db.prepare('SELECT owner,payload FROM bee_invoices WHERE id=?').bind(p.requestId).first();
+ if(old){if(old.owner!==owner)fail('Счёт недоступен',404);return json(publicInvoice(JSON.parse(old.payload)))}
+ const quoted=await quote(env,p.plan,p.asset),created=now();
+ const invoice={id:p.requestId,plan:quoted.plan,asset:quoted.asset,usd:quoted.usd,amount:quoted.amount,units:quoted.units,decimals:quoted.decimals,assetLabel:quoted.assetLabel,quotedAt:quoted.quotedAt,created,expires:created+900,reference:base58(crypto.getRandomValues(new Uint8Array(32)))};
+ const inserted=await db.prepare("INSERT OR IGNORE INTO bee_invoices(id,owner,payload) SELECT ?,?,? WHERE (SELECT COUNT(*) FROM bee_invoices WHERE owner=? AND paid=0 AND CAST(json_extract(payload,'$.expires') AS INTEGER)>?)<5").bind(invoice.id,owner,JSON.stringify(invoice),owner,created).run();
+ if(!inserted.meta.changes){const raced=await db.prepare('SELECT owner,payload FROM bee_invoices WHERE id=?').bind(p.requestId).first();if(raced?.owner===owner)return json(publicInvoice(JSON.parse(raced.payload)));fail('Слишком много активных счетов',429)}
+ return json(publicInvoice(invoice),201);
+}
+async function paymentVerify(db,env,owner,p){
+ if(typeof p.invoice!=='string'||!/^[a-f0-9-]{36}$/.test(p.invoice)||typeof p.signature!=='string'||!/^[1-9A-HJ-NP-Za-km-z]{64,88}$/.test(p.signature))fail('Проверьте счёт и подпись транзакции');
+ const row=await db.prepare('SELECT owner,payload,paid,signature FROM bee_invoices WHERE id=?').bind(p.invoice).first();if(!row||row.owner!==owner)fail('Счёт недоступен',404);
+ if(row.paid){if(row.signature!==p.signature)fail('Счёт уже оплачен другой транзакцией',409);return json({paid:true,...await paymentStatus(db,owner)})}
+ const invoice=JSON.parse(row.payload);
+ const tx=await rpc(env,'getTransaction',[p.signature,{encoding:'jsonParsed',commitment:'finalized',maxSupportedTransactionVersion:0}]);
+ validateTransfer(tx,invoice);
+ const reused=await db.prepare('SELECT id FROM bee_invoices WHERE signature=?').bind(p.signature).first();if(reused&&reused.id!==p.invoice)fail('Транзакция уже использована',409);
+ const duration=(invoice.plan==='yearly'?365:30)*86400,at=now();
+ try{await db.batch([
+ db.prepare('UPDATE bee_invoices SET signature=?,paid=1 WHERE id=? AND owner=? AND paid=0').bind(p.signature,p.invoice,owner),
+ db.prepare('INSERT INTO bee_entitlements(owner,expires,updated) SELECT owner,?,? FROM bee_invoices WHERE id=? AND owner=? AND paid=1 AND applied=0 AND signature=? ON CONFLICT(owner) DO UPDATE SET expires=MAX(bee_entitlements.expires,?)+?,updated=?').bind(at+duration,at,p.invoice,owner,p.signature,at,duration,at),
+ db.prepare('UPDATE bee_invoices SET applied=1 WHERE id=? AND owner=? AND paid=1 AND signature=?').bind(p.invoice,owner,p.signature)
+ ])}catch{fail('Не удалось подтвердить счёт. Повторите проверку.',409)}
+ const paid=await db.prepare('SELECT paid,signature FROM bee_invoices WHERE id=? AND owner=?').bind(p.invoice,owner).first();if(!paid?.paid||paid.signature!==p.signature)fail('Счёт изменился. Повторите проверку.',409);
+ return json({paid:true,...await paymentStatus(db,owner)});
+}
+async function paymentStatus(db,owner){const row=await db.prepare('SELECT expires FROM bee_entitlements WHERE owner=?').bind(owner).first();return {active:!!row&&row.expires>now(),expires:row?.expires||null}}
 
 async function journalScope(owner){return [...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(owner)))].map(b=>b.toString(16).padStart(2,'0')).join('')}
 function applyJournalChanges(journal,changes){
@@ -43,7 +73,7 @@ function applyJournalChanges(journal,changes){
  if(change.collection==='tasks'&&(typeof row.title!=='string'||!row.title.trim()||row.title.length>200||typeof row.done!=='boolean'||row.suspended!==undefined&&typeof row.suspended!=='boolean'))fail('Неверная задача');
  if(index<0)result[change.collection].push(row);else result[change.collection][index]=row;
  }
- try{validateSeasonLinks(result)}catch(e){fail(e.message)}if(new TextEncoder().encode(JSON.stringify(result)).length>200000)fail('Журнал превышает 200 КБ. Экспортируйте резервную копию.',413);return result;
+ try{validateSeasonLinks(result)}catch(e){fail(e.message)}if(new TextEncoder().encode(JSON.stringify(result)).length>1900000)fail('Журнал превышает 2 МБ. Экспортируйте резервную копию.',413);return result;
 }
 async function syncJournal(db,owner,p){
  if(!Number.isSafeInteger(p.revision)||p.revision<0)fail('Неверная версия');const old=await db.prepare('SELECT payload,revision,updated FROM bee_journals WHERE owner=?').bind(owner).first();if((old?.revision||0)!==p.revision)fail('Журнал изменился на другом устройстве. Повторите синхронизацию.',409);
@@ -56,6 +86,26 @@ async function syncJournal(db,owner,p){
  if(!result.meta.changes)fail('Журнал изменился на другом устройстве. Повторите синхронизацию.',409);return json({revision:p.revision+1});
 }
 
+
+async function ensureJournalRecords(db,owner){
+ if(await db.prepare('SELECT revision FROM bee_journal_record_state WHERE owner=?').bind(owner).first())return;
+ const queries=[db.prepare('DELETE FROM bee_journal_records WHERE owner=?').bind(owner)];
+ for(const collection of ['hives','tasks','notes','flowerings','breeding','queens','expenses'])queries.push(db.prepare("INSERT INTO bee_journal_records(owner,collection,id,payload) SELECT owner,?,json_extract(value,'$.id'),value FROM bee_journals,json_each(bee_journals.payload,?) WHERE owner=?").bind(collection,'$.'+collection,owner));
+ for(const key of ['region','language','hemisphere','season'])queries.push(db.prepare("INSERT INTO bee_journal_records(owner,collection,id,payload) SELECT owner,'settings',?,json_quote(json_extract(payload,?)) FROM bee_journals WHERE owner=? AND json_type(payload,?)='text'").bind(key,'$.'+key,owner,'$.'+key));
+ queries.push(db.prepare('INSERT INTO bee_journal_record_state(owner,revision) SELECT owner,revision FROM bee_journals WHERE owner=? ON CONFLICT(owner) DO UPDATE SET revision=excluded.revision').bind(owner));await db.batch(queries);
+}
+async function journalPage(db,owner,url){
+ await ensureJournalRecords(db,owner);
+ const head=await db.prepare('SELECT revision FROM bee_journals WHERE owner=?').bind(owner).first();
+ const revision=head?.revision||0,expected=url.searchParams.get('revision');
+ if(expected!==null&&(!/^\d+$/.test(expected)||Number(expected)!==revision))fail('Журнал изменился на другом устройстве. Повторите синхронизацию.',409);
+ let collection='',id='';const cursor=url.searchParams.get('cursor');
+ if(cursor){try{[collection,id]=JSON.parse(atob(cursor));if(!['hives','tasks','notes','flowerings','breeding','queens','expenses','settings'].includes(collection)||typeof id!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(id))throw Error()}catch{fail('Неверный курсор')}}
+ const {results}=await db.prepare('SELECT collection,id,payload FROM bee_journal_records WHERE owner=? AND (collection,id)>(?,?) ORDER BY collection,id LIMIT 51').bind(owner,collection,id).all();
+ const check=await db.prepare('SELECT revision FROM bee_journals WHERE owner=?').bind(owner).first();if((check?.revision||0)!==revision)fail('Журнал изменился на другом устройстве. Повторите синхронизацию.',409);
+ const rows=results.slice(0,50),last=rows.at(-1);
+ return json({revision,journalScope:await journalScope(owner),rows:rows.map(r=>({collection:r.collection,id:r.id,value:JSON.parse(r.payload)})),nextCursor:results.length>50?btoa(JSON.stringify([last.collection,last.id])):null});
+}
 
 async function photosAPI(request,env,url){const owner=identity(request),db=env.DB;if(!env.BUCKET)fail('Облачное хранилище фото недоступно',503);const scope=await journalScope(owner);if(request.headers.has('X-CybBee-Journal-Scope')&&request.headers.get('X-CybBee-Journal-Scope')!==scope)fail('Аккаунт изменился. Автоматический обмен остановлен.',403);
  if(request.method==='GET'){localReadLimit(request);const id=url.searchParams.get('id');if(!id){const {results}=await db.prepare('SELECT id,note_id,bytes,created,ready,deleted_at FROM bee_photos WHERE owner=? ORDER BY created,id LIMIT 100').bind(owner).all();return json({photos:results.filter(r=>r.ready===1),trash:results.filter(r=>r.ready===2),pending:results.filter(r=>r.ready===0||r.ready===3),usage:{count:results.length,bytes:results.reduce((sum,r)=>sum+r.bytes,0),limit:100,maxBytes:50000000}})}if(!/^[a-zA-Z0-9_-]{1,80}$/.test(id))fail('Неверный ID');const row=await db.prepare('SELECT id FROM bee_photos WHERE owner=? AND id=? AND ready=1').bind(owner,id).first();if(!row)fail('Фото не найдено',404);const object=await env.BUCKET.get(scope+'/'+id);if(!object)fail('Фото не найдено',404);return new Response(object.body,{headers:{'Content-Type':'image/jpeg','Content-Disposition':'attachment; filename="cybbee-photo.jpg"','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})}
@@ -77,9 +127,11 @@ if(p.consent!==true||typeof p.id!=='string'||typeof p.noteId!=='string'||! /^[a-
  const reservation=await db.prepare('INSERT INTO bee_photos(owner,id,note_id,bytes,created,ready) SELECT ?,?,?,?,?,0 WHERE (SELECT COUNT(*) FROM bee_photos WHERE owner=?)<100 AND (SELECT COUNT(*) FROM bee_photos WHERE owner=? AND note_id=?)<3').bind(owner,p.id,p.noteId,bytes.length,now(),owner,owner,p.noteId).run();if(!reservation.meta.changes)fail('Лимит: 100 фото в аккаунте, до 3 на запись',413);
  try{await env.BUCKET.put(scope+'/'+p.id,bytes,{httpMetadata:{contentType:'image/jpeg'}});await db.prepare('UPDATE bee_photos SET ready=1 WHERE owner=? AND id=?').bind(owner,p.id).run()}catch(e){await env.BUCKET.delete(scope+'/'+p.id).catch(()=>{});await db.prepare('DELETE FROM bee_photos WHERE owner=? AND id=? AND ready=0').bind(owner,p.id).run();throw e}return json({ok:true},201);
 }
-export async function api(request,env){const url=new URL(request.url),path=url.pathname,db=env.DB;try{if(path==='/api/weather'){localReadLimit(request);return await weatherAPI(request)}if(path==='/api/photos')return await photosAPI(request,env,url);if(path==='/api/me')return json({signedIn:!!request.headers.get('oai-authenticated-user-id'),journalScope:request.headers.get('oai-authenticated-user-id')?await journalScope(identity(request)):null,signIn:'/signin-with-chatgpt?return_to=%2F',signOut:'/signout-with-chatgpt?return_to=%2F'});if(request.method==='GET'){if(path==='/api/community/posts'){localReadLimit(request);return json(await postPage(db,url,request.headers.get('oai-authenticated-user-id')))}if(path==='/api/community/points'){localReadLimit(request);return json(await pointPage(db,url,request.headers.get('oai-authenticated-user-id')))}if(path==='/api/journal'){const owner=identity(request);const row=await db.prepare('SELECT payload,revision,updated FROM bee_journals WHERE owner=?').bind(owner).first();return json(row?{journal:JSON.parse(row.payload),revision:row.revision,updated:row.updated,journalScope:await journalScope(owner)}:{journal:null,revision:0,journalScope:await journalScope(owner)})}if(path==='/api/payments/config')return json({recipient:RECIPIENT,mint:MINT,plans:PLANS,enabled:env.CHECKOUT_ENABLED==='1'});return json({error:'Not found'},404)}
-if(!['POST','DELETE','PUT'].includes(request.method))return json({error:'Method not allowed'},405);if(request.headers.get('Origin')!==url.origin)fail('Origin rejected',403);let owner;if(path!=='/api/payments/quote'){owner=identity(request);if(path==='/api/payments/invoices'&&env.CHECKOUT_ENABLED!=='1')fail('Приём оплаты пока отключён');}const p=await limitedJSON(request,path.startsWith('/api/journal')?200000:4096);
+export async function api(request,env){const url=new URL(request.url),path=url.pathname,db=env.DB;try{if(path==='/api/health'){if(request.method!=='GET')return json({error:'Method not allowed'},405);localReadLimit(request);await db.prepare('SELECT 1 AS ok').first();return json({ok:true,service:'CybBee',checkedAt:now()})}if(path==='/api/weather'){localReadLimit(request);return await weatherAPI(request)}if(path==='/api/photos')return await photosAPI(request,env,url);if(path==='/api/me')return json({signedIn:!!request.headers.get('oai-authenticated-user-id'),journalScope:request.headers.get('oai-authenticated-user-id')?await journalScope(identity(request)):null,signIn:'/signin-with-chatgpt?return_to=%2F',signOut:'/signout-with-chatgpt?return_to=%2F'});if(request.method==='GET'){if(path==='/api/community/posts'){localReadLimit(request);return json(await postPage(db,url,request.headers.get('oai-authenticated-user-id')))}if(path==='/api/community/points'){localReadLimit(request);return json(await pointPage(db,url,request.headers.get('oai-authenticated-user-id')))}if(path==='/api/journal/pages')return await journalPage(db,identity(request),url);if(path==='/api/journal'){const owner=identity(request);const row=await db.prepare('SELECT payload,revision,updated FROM bee_journals WHERE owner=?').bind(owner).first();return json(row?{journal:JSON.parse(row.payload),revision:row.revision,updated:row.updated,journalScope:await journalScope(owner)}:{journal:null,revision:0,journalScope:await journalScope(owner)})}if(path==='/api/payments/status')return json(await paymentStatus(db,identity(request)));if(path==='/api/payments/config')return json({recipient:RECIPIENT,mint:MINT,plans:PLANS,enabled:env.CHECKOUT_ENABLED==='1'});return json({error:'Not found'},404)}
+if(!['POST','DELETE','PUT'].includes(request.method))return json({error:'Method not allowed'},405);if(request.headers.get('Origin')!==url.origin)fail('Origin rejected',403);let owner;if(path!=='/api/payments/quote'){owner=identity(request);if(path==='/api/payments/invoices'&&env.CHECKOUT_ENABLED!=='1')fail('Приём оплаты пока отключён');}const p=await limitedJSON(request,path.startsWith('/api/journal')?2100000:4096);
 if(path==='/api/payments/quote'){localReadLimit(request,30);return json(await quote(env,p.plan,p.asset));}await writeLimit(db,owner);
+if(path==='/api/payments/invoices'&&request.method==='POST')return await paymentInvoice(db,env,owner,p);
+if(path==='/api/payments/verify'&&request.method==='POST')return await paymentVerify(db,env,owner,p);
 if(path==='/api/community/posts'&&request.method==='POST'){const text=typeof p.text==='string'?p.text.trim():'',author=typeof p.author==='string'?p.author.trim():'';if(!text||text.length>2000||!author||author.length>50||!['chat','blog'].includes(p.kind)||p.consent!=='on')fail('Проверьте запись и согласие');const inserted=await db.prepare('INSERT INTO bee_posts(id,owner,author,kind,text,created) SELECT ?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM bee_posts WHERE owner=? AND created>? LIMIT 1)').bind(crypto.randomUUID(),owner,author,p.kind,text,now(),owner,now()-15).run();if(!inserted.meta.changes)fail('Подождите 15 секунд между записями',429);return json({ok:true},201)}
 if(path==='/api/community/posts'&&request.method==='DELETE'){await db.prepare('DELETE FROM bee_posts WHERE id=? AND owner=?').bind(String(p.id),owner).run();return json({ok:true})}
 if(path==='/api/community/report'){if(typeof p.reason!=='string'||p.reason.length<3||p.reason.length>500)fail('Укажите причину');await db.prepare('INSERT OR IGNORE INTO bee_reports(post_id,reporter,reason,created) SELECT id,?,?,? FROM bee_posts WHERE id=? AND owner<>?').bind(owner,p.reason,now(),String(p.id),owner).run();await db.prepare('UPDATE bee_posts SET hidden=1 WHERE id=? AND (SELECT COUNT(*) FROM bee_reports WHERE post_id=?)>=3').bind(String(p.id),String(p.id)).run();return json({ok:true})}
@@ -88,4 +140,4 @@ if(path==='/api/community/points'&&request.method==='DELETE'){await db.prepare('
 if(path==='/api/journal/sync'&&request.method==='POST'){if(p.journalScope!==undefined&&p.journalScope!==await journalScope(owner))fail('Аккаунт изменился. Автоматический обмен остановлен.',403);return await syncJournal(db,owner,p)}
 if(path==='/api/journal'&&request.method==='PUT')fail('Обновите приложение: используйте синхронизацию изменений',409);
 return json({error:'Not found'},404)
-}catch(e){const response=json({error:e.status?e.message:'Сервис временно недоступен'},e.status||503);if(e.status===429)response.headers.set('Retry-After','60');return response}}
+}catch(e){if(!e.status||e.status>=500)console.error(JSON.stringify({event:'cybbee_api_failure',route:path,status:e.status||503,errorType:e.name||'Error',requestId:request.headers.get('CF-Ray')||null}));const response=json({error:e.status?e.message:'Сервис временно недоступен'},e.status||503);if(e.status===429)response.headers.set('Retry-After','60');return response}}

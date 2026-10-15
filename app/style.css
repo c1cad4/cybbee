@@ -104,3 +104,7 @@ html[dir=rtl] .garden-flight-layer{inset:0 246px 0 0}@media(max-width:760px){.ga
 aside{background-color:#3c3827;background-image:linear-gradient(90deg,#27261908,#302b2350 46%,#302b2370),url('assets/honey-sidebar.svg'),radial-gradient(ellipse at 20% 0%,#ac7b37aa,transparent 66%),linear-gradient(165deg,#67502c,#30382a);background-size:100% 100%,100% auto,100% 100%,100% 100%;background-position:center top;background-repeat:no-repeat,repeat-y,no-repeat,no-repeat;border-right:1px solid #f3cc7959;box-shadow:inset -1px 0 #ffe0a825,8px 0 30px #6c4d1a14}
 aside .brand{filter:drop-shadow(0 2px 5px #201d1240)}aside>p{color:#f3dfb5}.apiary-nav-item:not(.active){background:linear-gradient(100deg,#fff0be05,#fff0be00)}.apiary-nav-item:not(.active):hover{background:#fff2cc0d;border-color:#eaca8555}
 @media(max-width:760px){aside{background-size:100% 100%,300px auto,100% 100%,100% 100%;background-position:center top,right -28px top -75px,center top,center top;border-right:0;border-bottom:1px solid #e6c27b70}.apiary-nav-item:not(.active){background:none}}
+
+/* The apiary welcome illustration uses the same honey and botanical palette. */
+.apiary-scene{padding:0;background:#fff0cd;box-shadow:0 0 0 1px #ffedc080,0 10px 28px #9d702017}.apiary-scene .apiary-garden-image{display:block;width:100%;height:auto;max-width:100%;object-fit:cover;object-position:center center}
+@media(max-width:760px){.apiary-scene .apiary-garden-image{aspect-ratio:2.1 / 1;object-fit:cover;object-position:50% 50%}}
