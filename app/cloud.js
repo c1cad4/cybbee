@@ -1,4 +1,4 @@
-import {readJournalPages} from './journal-pages.js';
+import {readJournalIncremental} from './journal-delta.js';
 import {exchangeJournal} from './journal-exchange.js';
 import {assertLocalJournalCurrent,localJournalStatus} from './local-journal.js';
 import {translation} from './presentation.js';
@@ -14,7 +14,7 @@ let exchangeBusy=false;
 export async function runCloudExchange(store,save,{interactive=false,expectedScope=null,allowSend=()=>true}={}){
  if(exchangeBusy)return {busy:true};exchangeBusy=true;
  try{const user=await read('/api/me');if(!user.signedIn||!user.journalScope)throw Error('Войдите через ChatGPT для синхронизации');if(expectedScope&&user.journalScope!==expectedScope)throw Error('Аккаунт изменился. Автоматический обмен остановлен.');const key='cybbee.syncBase.'+user.journalScope;let base=null;try{base=JSON.parse(localStorage.getItem(key)||'null')}catch{}
- const result=await exchangeJournal({getState:()=>store,base,readRemote:()=>readJournalPages(read,user.journalScope),writeRemote:body=>read('/api/journal/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,journalScope:user.journalScope})}),choose:interactive?conflictsUI:undefined,assertCurrent:()=>{if(!allowSend())throw Error('Автоматический обмен выключен.');if(!interactive||localJournalStatus().error!=='damaged')assertLocalJournalCurrent()},beforeApply:()=>backup(store),persist:()=>save({recovery:interactive}),saveBase:journal=>localStorage.setItem(key,JSON.stringify(journal))});
+ const result=await exchangeJournal({getState:()=>store,base,readRemote:()=>readJournalIncremental(read,user.journalScope),writeRemote:body=>read('/api/journal/sync',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,journalScope:user.journalScope})}),choose:interactive?conflictsUI:undefined,assertCurrent:()=>{if(!allowSend())throw Error('Автоматический обмен выключен.');if(!interactive||localJournalStatus().error!=='damaged')assertLocalJournalCurrent()},beforeApply:()=>backup(store),persist:()=>save({recovery:interactive}),saveBase:journal=>localStorage.setItem(key,JSON.stringify(journal))});
  if(!result.needsChoice&&!result.cancelled)document.dispatchEvent(new CustomEvent('cybbee-journal-exchanged',{detail:{...result,manual:interactive}}));return result;
  }finally{exchangeBusy=false}
 }
