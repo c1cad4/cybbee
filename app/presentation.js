@@ -50,8 +50,8 @@ const rows=[
 rows.unshift(...releaseRows);
 rows.push(...reliabilityRows,...deviceRows,...photoQueueRows,...technologyRows,...voiceRows,...weatherRows,...apiaryRows,...hiveRows,...communityRows,...mapRows,...settingsRows,...extraRows,...seasonRows,...foundationRows);
 export function resolveLanguage(requested){const base=(requested||'en').toLowerCase().split(/[-_]/)[0];return languages.some(([code])=>code===base)?base:'en';}
-const englishFragments=Object.entries(uiEnglish).sort((a,b)=>b[0].length-a[0].length).map(([key,value])=>[new RegExp('(?<![\\p{L}\\p{N}])'+key.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{N}])','gu'),value]);
-function translateValue(text,lang){const index=languages.findIndex(([code])=>code===resolveLanguage(lang));const row=rows.find(row=>row[0]===text);if(row)return row[index];if(resolveLanguage(lang)!=='en')return text;if(uiEnglish[text])return uiEnglish[text];if(!/[А-Яа-яЁё]/.test(text))return text;let translated=text;for(const [source,target]of englishFragments)translated=translated.replace(source,target);return translated;}
+const englishFragments=Object.entries(uiEnglish).sort((a,b)=>b[0].length-a[0].length).map(([key,value])=>[new RegExp('(^|[^\\p{L}\\p{N}])'+key.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?![\\p{L}\\p{N}])','gu'),value]);
+function translateValue(text,lang){const index=languages.findIndex(([code])=>code===resolveLanguage(lang));const row=rows.find(row=>row[0]===text);if(row)return row[index];if(resolveLanguage(lang)!=='en')return text;if(uiEnglish[text])return uiEnglish[text];if(!/[А-Яа-яЁё]/.test(text))return text;let translated=text;for(const [source,target]of englishFragments)translated=translated.replace(source,(_,prefix)=>prefix+target);return translated;}
 const translationCache=new Map();
 export function translation(text,lang){const key=resolveLanguage(lang)+'|'+text;if(translationCache.has(key))return translationCache.get(key);const value=translateValue(text,lang);if(translationCache.size>=2000)translationCache.clear();translationCache.set(key,value);return value;}
 // Keep original interface copy so a second language change does not translate
