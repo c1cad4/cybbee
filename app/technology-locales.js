@@ -33,14 +33,223 @@ export const technologyRows=[
 ['Материалы для ответа ИИ','References for the AI answer','AI 回答参考资料','AI उत्तर के संदर्भ','Fuentes para la respuesta IA','مراجع إجابة الذكاء الاصطناعي','Fontes da resposta IA','AI উত্তরের তথ্যসূত্র','Sources de la réponse IA','Quellen für die KI-Antwort'],
 ['Подходящих памяток не найдено. Уточните вопрос.','No matching guide. Refine your question.','未找到相关指南。请细化问题。','उपयुक्त मार्गदर्शिका नहीं मिली। प्रश्न स्पष्ट करें।','No hay guías coincidentes. Precisa la pregunta.','لم يوجد دليل مناسب. وضّح السؤال.','Nenhum guia correspondente. Refine a pergunta.','উপযুক্ত নির্দেশিকা নেই। প্রশ্ন স্পষ্ট করুন।','Aucun guide trouvé. Précisez la question.','Kein passender Leitfaden. Frage präzisieren.'],
 ];
-// Detailed compatibility and error copy uses English fallback until reviewed translations arrive.
+// Detailed compatibility and error copy in all supported languages.
 const details=[
-['В ответе нет ссылок на материалы. Сверьте его с памятками ниже.','The answer has no citations. Compare it with the guides below.'],
-['Показания хранятся отдельно на этом устройстве. Экспортируйте их отдельно. Датчик не определяет здоровье семьи.','Readings stay separately on this device. Export them separately. Sensors do not diagnose colony health.'],
-['Bluetooth: только Environmental Sensing, температура и влажность. Вес импортируется из CSV / JSON. Поддержка зависит от браузера.','Bluetooth: Environmental Sensing temperature and humidity only. Import weight via CSV / JSON. Support depends on the browser.'],
-['Импорт добавляет показания к открытому улью. Bluetooth сохраняет не чаще одного замера в минуту для каждого показателя. Уведомления видны только при открытой панели.','Imports belong to the open hive. Bluetooth stores at most one reading per minute per metric. Alerts appear only while this panel is open.'],
-['Снимки одного улья по датам. Сравнение не определяет болезни и не заменяет осмотр.','Photos of one hive by date. Comparison does not diagnose disease or replace inspection.'],
-['Работает без загрузки ИИ. Материалы выбираются из памяток CybBee; личный журнал не используется.','Works without downloading AI. Searches CybBee guides without using your private journal.'],
-['Показания сохранены на устройстве.','Readings saved on this device.'],['Неверные показания датчика','Invalid sensor readings'],['Неверный файл датчиков','Invalid sensor file'],['Неверные пределы','Invalid limits'],['Не удалось подключить датчик.','Could not connect sensor.'],['Bluetooth недоступен. Используйте импорт CSV.','Bluetooth unavailable. Use CSV import.'],['Датчик подключён. Показания сохраняются локально.','Sensor connected. Readings are saved locally.'],['Совместимых показаний не найдено.','No compatible readings found.'],['Не удалось открыть фотографии','Could not open photos'],['Лимит показаний: 5000. Сначала экспортируйте данные.','Reading limit: 5000. Export your data first.'],['В ответе есть неизвестная ссылка. Проверьте материалы.','The answer contains an unknown citation. Check the references.'],['Источники показаны ниже. Они не гарантируют точность каждого утверждения модели.','Sources are shown below. They do not guarantee every model claim is accurate.']
+ [
+  "В ответе нет ссылок на материалы. Сверьте его с памятками ниже.",
+  "The answer has no citations. Compare it with the guides below.",
+  "回答没有引用。请与下方指南核对。",
+  "उत्तर में संदर्भ नहीं हैं। नीचे की मार्गदर्शिकाओं से मिलाएँ।",
+  "La respuesta no tiene citas. Compárala con las guías de abajo.",
+  "لا تحتوي الإجابة على مراجع. قارنها بالأدلة أدناه.",
+  "A resposta não tem citações. Compare com os guias abaixo.",
+  "উত্তরে তথ্যসূত্র নেই। নিচের নির্দেশিকার সঙ্গে মিলিয়ে দেখুন।",
+  "La réponse ne contient pas de citations. Comparez-la aux guides ci-dessous.",
+  "Die Antwort enthält keine Quellenverweise. Mit den Leitfäden unten abgleichen."
+ ],
+ [
+  "Показания хранятся отдельно на этом устройстве. Экспортируйте их отдельно. Датчик не определяет здоровье семьи.",
+  "Readings stay separately on this device. Export them separately. Sensors do not diagnose colony health.",
+  "读数单独保存在此设备上，请单独导出。传感器不能诊断蜂群健康。",
+  "माप इस डिवाइस पर अलग रहते हैं। इन्हें अलग निर्यात करें। सेंसर कॉलोनी का निदान नहीं करता।",
+  "Las lecturas se guardan aparte en este dispositivo. Expórtalas por separado. Los sensores no diagnostican la salud de la colonia.",
+  "تُحفظ القراءات منفصلة على هذا الجهاز. صدّرها منفصلة. المستشعر لا يشخّص صحة الطائفة.",
+  "As leituras ficam separadas neste dispositivo. Exporte-as separadamente. Sensores não diagnosticam a saúde da colônia.",
+  "মাপ এই ডিভাইসে আলাদা থাকে। আলাদাভাবে রপ্তানি করুন। সেন্সর কলোনির স্বাস্থ্য নির্ণয় করে না।",
+  "Les mesures restent séparément sur cet appareil. Exportez-les à part. Les capteurs ne diagnostiquent pas la santé de la colonie.",
+  "Messwerte werden separat auf diesem Gerät gespeichert. Separat exportieren. Sensoren diagnostizieren keine Volksgesundheit."
+ ],
+ [
+  "Bluetooth: только Environmental Sensing, температура и влажность. Вес импортируется из CSV / JSON. Поддержка зависит от браузера.",
+  "Bluetooth: Environmental Sensing temperature and humidity only. Import weight via CSV / JSON. Support depends on the browser.",
+  "蓝牙仅支持 Environmental Sensing 温度和湿度。重量通过 CSV / JSON 导入。支持情况取决于浏览器。",
+  "Bluetooth में केवल Environmental Sensing तापमान और आर्द्रता। वजन CSV / JSON से आयात करें। समर्थन ब्राउज़र पर निर्भर है।",
+  "Bluetooth: solo temperatura y humedad de Environmental Sensing. Importa el peso por CSV / JSON. Depende del navegador.",
+  "Bluetooth: حرارة ورطوبة Environmental Sensing فقط. يُستورد الوزن عبر CSV / JSON. يعتمد الدعم على المتصفح.",
+  "Bluetooth: apenas temperatura e umidade Environmental Sensing. Peso via CSV / JSON. Suporte depende do navegador.",
+  "Bluetooth: শুধু Environmental Sensing তাপমাত্রা ও আর্দ্রতা। ওজন CSV / JSON থেকে আনুন। সমর্থন ব্রাউজারনির্ভর।",
+  "Bluetooth : température et humidité Environmental Sensing uniquement. Poids via CSV / JSON. La compatibilité dépend du navigateur.",
+  "Bluetooth: nur Temperatur und Feuchte über Environmental Sensing. Gewicht per CSV / JSON importieren. Unterstützung hängt vom Browser ab."
+ ],
+ [
+  "Импорт добавляет показания к открытому улью. Bluetooth сохраняет не чаще одного замера в минуту для каждого показателя. Уведомления видны только при открытой панели.",
+  "Imports belong to the open hive. Bluetooth stores at most one reading per minute per metric. Alerts appear only while this panel is open.",
+  "导入数据归属于当前蜂箱。蓝牙每个指标每分钟最多保存一次。提醒仅在面板打开时显示。",
+  "आयात खुले छत्ते से जुड़ता है। Bluetooth हर माप को अधिकतम एक बार प्रति मिनट सहेजता है। चेतावनी केवल खुले पैनल में दिखती है।",
+  "La importación pertenece a la colmena abierta. Bluetooth guarda como máximo una lectura por minuto y medida. Avisos solo con el panel abierto.",
+  "تُضاف القراءات للخلية المفتوحة. يحفظ Bluetooth قراءة واحدة بالدقيقة لكل مقياس كحد أقصى. التنبيهات تظهر مع فتح اللوحة فقط.",
+  "A importação pertence à colmeia aberta. Bluetooth salva no máximo uma leitura por minuto por medida. Alertas só no painel aberto.",
+  "আমদানি খোলা মৌচাকের সঙ্গে যুক্ত হয়। Bluetooth প্রতি সূচকে মিনিটে সর্বোচ্চ একটি মাপ রাখে। প্যানেল খোলা থাকলেই সতর্কতা দেখা যায়।",
+  "Les imports concernent la ruche ouverte. Bluetooth conserve au plus une mesure par minute et par indicateur. Alertes uniquement dans le panneau ouvert.",
+  "Importe gehören zum geöffneten Stock. Bluetooth speichert je Messgröße höchstens einmal pro Minute. Hinweise erscheinen nur im geöffneten Bereich."
+ ],
+ [
+  "Снимки одного улья по датам. Сравнение не определяет болезни и не заменяет осмотр.",
+  "Photos of one hive by date. Comparison does not diagnose disease or replace inspection.",
+  "按日期查看同一蜂箱照片。比较不能诊断疾病，也不能代替检查。",
+  "तारीख के अनुसार एक छत्ते की तस्वीरें। तुलना बीमारी का निदान या निरीक्षण का विकल्प नहीं है।",
+  "Fotos de una colmena por fecha. La comparación no diagnostica enfermedades ni sustituye la inspección.",
+  "صور خلية واحدة حسب التاريخ. المقارنة لا تشخّص الأمراض ولا تستبدل الفحص.",
+  "Fotos de uma colmeia por data. A comparação não diagnostica doenças nem substitui inspeção.",
+  "তারিখ অনুযায়ী একই মৌচাকের ছবি। তুলনা রোগ নির্ণয় বা পরিদর্শনের বিকল্প নয়।",
+  "Photos d’une même ruche par date. La comparaison ne diagnostique pas de maladie et ne remplace pas l’inspection.",
+  "Fotos eines Stocks nach Datum. Der Vergleich diagnostiziert keine Krankheiten und ersetzt keine Inspektion."
+ ],
+ [
+  "Работает без загрузки ИИ. Материалы выбираются из памяток CybBee; личный журнал не используется.",
+  "Works without downloading AI. Searches CybBee guides without using your private journal.",
+  "无需下载 AI。搜索 CybBee 指南，不使用私人日志。",
+  "AI डाउनलोड बिना काम करता है। CybBee मार्गदर्शिकाएँ खोजता है; निजी जर्नल का उपयोग नहीं करता।",
+  "Funciona sin descargar IA. Busca en las guías CybBee sin usar el diario privado.",
+  "يعمل دون تنزيل الذكاء الاصطناعي. يبحث في أدلة CybBee دون استخدام سجلك الخاص.",
+  "Funciona sem baixar IA. Pesquisa os guias CybBee sem usar o diário privado.",
+  "AI নামানো ছাড়াই চলে। ব্যক্তিগত জার্নাল ব্যবহার না করে CybBee নির্দেশিকা খোঁজে।",
+  "Fonctionne sans télécharger d’IA. Recherche dans les guides CybBee sans utiliser le journal privé.",
+  "Funktioniert ohne KI-Download. Durchsucht CybBee-Leitfäden ohne das private Journal."
+ ],
+ [
+  "Показания сохранены на устройстве.",
+  "Readings saved on this device.",
+  "读数已保存在设备上。",
+  "माप डिवाइस पर सहेजे गए।",
+  "Lecturas guardadas en el dispositivo.",
+  "حُفظت القراءات على الجهاز.",
+  "Leituras salvas no dispositivo.",
+  "মাপ ডিভাইসে সংরক্ষিত।",
+  "Mesures enregistrées sur l’appareil.",
+  "Messwerte auf dem Gerät gespeichert."
+ ],
+ [
+  "Неверные показания датчика",
+  "Invalid sensor readings",
+  "传感器读数无效",
+  "सेंसर माप अमान्य",
+  "Lecturas del sensor no válidas",
+  "قراءات المستشعر غير صالحة",
+  "Leituras do sensor inválidas",
+  "সেন্সরের মাপ অবৈধ",
+  "Mesures du capteur invalides",
+  "Ungültige Sensormesswerte"
+ ],
+ [
+  "Неверный файл датчиков",
+  "Invalid sensor file",
+  "传感器文件无效",
+  "सेंसर फ़ाइल अमान्य",
+  "Archivo de sensores no válido",
+  "ملف المستشعر غير صالح",
+  "Arquivo de sensores inválido",
+  "সেন্সর ফাইল অবৈধ",
+  "Fichier de capteurs invalide",
+  "Ungültige Sensordatei"
+ ],
+ [
+  "Неверные пределы",
+  "Invalid limits",
+  "限值无效",
+  "सीमाएँ अमान्य",
+  "Límites no válidos",
+  "حدود غير صالحة",
+  "Limites inválidos",
+  "সীমা অবৈধ",
+  "Limites invalides",
+  "Ungültige Grenzen"
+ ],
+ [
+  "Не удалось подключить датчик.",
+  "Could not connect sensor.",
+  "无法连接传感器。",
+  "सेंसर नहीं जुड़ा।",
+  "No se pudo conectar el sensor.",
+  "تعذر توصيل المستشعر.",
+  "Não foi possível conectar o sensor.",
+  "সেন্সর যুক্ত করা যায়নি।",
+  "Impossible de connecter le capteur.",
+  "Sensor konnte nicht verbunden werden."
+ ],
+ [
+  "Bluetooth недоступен. Используйте импорт CSV.",
+  "Bluetooth unavailable. Use CSV import.",
+  "蓝牙不可用。请使用 CSV 导入。",
+  "Bluetooth उपलब्ध नहीं। CSV आयात करें।",
+  "Bluetooth no disponible. Usa la importación CSV.",
+  "Bluetooth غير متاح. استخدم استيراد CSV.",
+  "Bluetooth indisponível. Use importação CSV.",
+  "Bluetooth নেই। CSV আমদানি করুন।",
+  "Bluetooth indisponible. Utilisez l’import CSV.",
+  "Bluetooth nicht verfügbar. CSV-Import verwenden."
+ ],
+ [
+  "Датчик подключён. Показания сохраняются локально.",
+  "Sensor connected. Readings are saved locally.",
+  "传感器已连接。读数保存在本地。",
+  "सेंसर जुड़ा। माप स्थानीय सहेजे जाते हैं।",
+  "Sensor conectado. Lecturas guardadas localmente.",
+  "المستشعر متصل. تُحفظ القراءات محليًا.",
+  "Sensor conectado. Leituras salvas localmente.",
+  "সেন্সর যুক্ত। মাপ স্থানীয়ভাবে রাখা হয়।",
+  "Capteur connecté. Mesures enregistrées localement.",
+  "Sensor verbunden. Messwerte werden lokal gespeichert."
+ ],
+ [
+  "Совместимых показаний не найдено.",
+  "No compatible readings found.",
+  "未找到兼容读数。",
+  "संगत माप नहीं मिले।",
+  "No se encontraron lecturas compatibles.",
+  "لم توجد قراءات متوافقة.",
+  "Nenhuma leitura compatível encontrada.",
+  "উপযুক্ত মাপ পাওয়া যায়নি।",
+  "Aucune mesure compatible trouvée.",
+  "Keine kompatiblen Messwerte gefunden."
+ ],
+ [
+  "Не удалось открыть фотографии",
+  "Could not open photos",
+  "无法打开照片",
+  "फोटो नहीं खुलीं",
+  "No se pudieron abrir las fotos",
+  "تعذر فتح الصور",
+  "Não foi possível abrir as fotos",
+  "ছবি খোলা যায়নি",
+  "Impossible d’ouvrir les photos",
+  "Fotos konnten nicht geöffnet werden"
+ ],
+ [
+  "Лимит показаний: 5000. Сначала экспортируйте данные.",
+  "Reading limit: 5000. Export your data first.",
+  "读数上限为 5000。请先导出数据。",
+  "माप सीमा 5000। पहले डेटा निर्यात करें।",
+  "Límite de 5000 lecturas. Exporta los datos primero.",
+  "حد القراءات 5000. صدّر البيانات أولًا.",
+  "Limite de 5000 leituras. Exporte os dados primeiro.",
+  "মাপের সীমা ৫০০০। আগে তথ্য রপ্তানি করুন।",
+  "Limite de 5000 mesures. Exportez d’abord les données.",
+  "Limit: 5000 Messwerte. Zuerst Daten exportieren."
+ ],
+ [
+  "В ответе есть неизвестная ссылка. Проверьте материалы.",
+  "The answer contains an unknown citation. Check the references.",
+  "回答包含未知引用。请检查资料。",
+  "उत्तर में अज्ञात संदर्भ है। स्रोत जाँचें।",
+  "La respuesta contiene una cita desconocida. Revisa las fuentes.",
+  "تتضمن الإجابة مرجعًا مجهولًا. تحقق من المواد.",
+  "A resposta contém citação desconhecida. Verifique as fontes.",
+  "উত্তরে অজানা তথ্যসূত্র আছে। উপকরণ দেখুন।",
+  "La réponse contient une citation inconnue. Vérifiez les sources.",
+  "Die Antwort enthält einen unbekannten Verweis. Quellen prüfen."
+ ],
+ [
+  "Источники показаны ниже. Они не гарантируют точность каждого утверждения модели.",
+  "Sources are shown below. They do not guarantee every model claim is accurate.",
+  "来源显示在下方，但不保证模型每条说法都准确。",
+  "स्रोत नीचे हैं। वे मॉडल के हर दावे की सटीकता की गारंटी नहीं हैं।",
+  "Las fuentes aparecen abajo; no garantizan cada afirmación del modelo.",
+  "المصادر أدناه لا تضمن دقة كل ادعاء للنموذج.",
+  "As fontes estão abaixo; não garantem cada afirmação do modelo.",
+  "উৎস নিচে আছে; মডেলের প্রতিটি দাবির যথার্থতা নিশ্চিত করে না।",
+  "Les sources ci-dessous ne garantissent pas chaque affirmation du modèle.",
+  "Die Quellen unten garantieren nicht die Richtigkeit jeder Modellaussage."
+ ]
 ];
-technologyRows.push(...details.map(([ru,en])=>[ru,...Array(9).fill(en)]));
+technologyRows.push(...details);

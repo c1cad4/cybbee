@@ -24,19 +24,19 @@ JSON export uses `format: cybbee-sensors-v1` and a `readings` array. Import atta
 
 ## Existing functionality and remaining validation
 
-- Offline journal and task persistence, conflict-aware journal exchange, local photo storage and explicit account photo transfer exist. Photos do not yet automatically transfer on reconnect. Browser storage is not a substitute for a downloaded backup.
+- Offline journal and task persistence, conflict-aware journal exchange, local photo storage and explicit account photo transfer exist. Optional automatic photo uploads now resume when the app is visible and reconnects, after separate account-scoped consent. Automatic photo downloads remain manual. Browser storage is not a substitute for a downloaded backup.
 - Weather near the calendar uses explicit consent and a coarse selected area, not an automatic precise GPS upload. Forecasts remain advisory and timestamped.
 - Voice inspection drafts exist with a review-before-save step. Device microphone, language packs and browser-specific offline recognition need physical Android/iPhone tests.
 - Bluetooth needs a real compatible sensor, secure context and supported browser. Safari/iPhone cannot be promised generic Web Bluetooth support; file import remains available. No physical sensor was connected during this update.
 - Notifications in the sensor module are in-panel only, not background push. Sensor data are not cloud-synced yet.
-- Photo AI descriptions are not implemented. Comparison remains visual and preserves uncertainty.
+- An experimental browser-local image description adapter is available with explicit consent. Model-double checks cover lifecycle; actual image inference accuracy and supported-device behavior remain unverified. See PHOTO_QUEUE.md.
 - The already consented local model generated one winter-observation answer without journal access. It omitted citation identifiers; the interface now warns explicitly about missing citations. This is a smoke check, not an accuracy evaluation or performance benchmark. Source retrieval tests do not prove model answer quality.
-- Main new controls have ten language entries. Detailed compatibility/error text currently falls back to English outside Russian, pending reviewed translations. Expanded legacy educational content also needs a complete editorial localization pass.
+- New controls and detailed sensor/AI compatibility/error text now have ten language entries. Expanded legacy educational content also needs a complete editorial localization pass.
 
 ## Next field-validation gates
 
 1. On Android and iPhone: create an inspection with photo offline, restart the app, reconnect and inspect journal conflict handling across both devices.
 2. Verify QR print/camera scan, voice draft consent, wrong language and cancelled permission paths.
 3. Connect an Environmental Sensing test device, confirm signed temperature, humidity, disconnect/reconnect, sampling rate and calibration against a reference instrument.
-4. Implement a durable, consent-based photo outbox and show pending/retry state before promising automatic photo synchronization.
+4. Validate the durable photo queue across physical devices and real reconnects. Keep automatic download and background delivery as separate future work.
 5. Add sensor cloud exchange with retention, conflict semantics and calibrated device identity before background alert delivery.
