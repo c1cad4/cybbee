@@ -2,7 +2,7 @@
 
 ## Delivered in this update
 
-- Reference search uses bundled CybBee guides and works without a model download. Each result has an excerpt, an internal reading view and the guide's original source link. Local AI receives the selected excerpts with G1/G2/G3 identifiers. Unknown citation identifiers are flagged. This is retrieval, not verification of every generated claim.
+- Reference search uses bundled CybBee guides and works without a model download. Each result has an excerpt, an internal reading view and the guide's original source link. Local AI receives the selected excerpts with G1/G2/G3 identifiers. Unknown and missing citation identifiers are flagged. This is retrieval, not verification of every generated claim.
 - User-selected hive notes remain opt-in per question. No journal is used by the independent reference-search form.
 - Every hive's downloaded SVG QR label now includes its name. The encoded URL contains only a hive ID; another device needs the corresponding journal to open its history. Printing and camera recognition still need real-device checks.
 - Compare two locally stored photos of the same hive, selected by inspection date. Archived inspections are excluded. No photos are sent to AI and no automated diagnosis is offered.
@@ -30,7 +30,7 @@ JSON export uses `format: cybbee-sensors-v1` and a `readings` array. Import atta
 - Bluetooth needs a real compatible sensor, secure context and supported browser. Safari/iPhone cannot be promised generic Web Bluetooth support; file import remains available. No physical sensor was connected during this update.
 - Notifications in the sensor module are in-panel only, not background push. Sensor data are not cloud-synced yet.
 - Photo AI descriptions are not implemented. Comparison remains visual and preserves uncertainty.
-- The local model has not been downloaded or benchmarked in this update. Source retrieval tests do not prove model answer quality.
+- The already consented local model generated one winter-observation answer without journal access. It omitted citation identifiers; the interface now warns explicitly about missing citations. This is a smoke check, not an accuracy evaluation or performance benchmark. Source retrieval tests do not prove model answer quality.
 - Main new controls have ten language entries. Detailed compatibility/error text currently falls back to English outside Russian, pending reviewed translations. Expanded legacy educational content also needs a complete editorial localization pass.
 
 ## Next field-validation gates

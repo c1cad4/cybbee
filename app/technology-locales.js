@@ -1,5 +1,7 @@
 // Order: ru, en, zh, hi, es, ar, pt, bn, fr, de.
 export const technologyRows=[
+['Источник ↗','Source ↗','来源 ↗','स्रोत ↗','Fuente ↗','المصدر ↗','Fonte ↗','উৎস ↗','Source ↗','Quelle ↗'],
+['Читать памятку','Read guide','阅读指南','मार्गदर्शिका पढ़ें','Leer guía','قراءة الدليل','Ler guia','নির্দেশিকা পড়ুন','Lire le guide','Leitfaden lesen'],
 ['Датчики улья','Hive sensors','蜂箱传感器','छत्ते के सेंसर','Sensores de la colmena','مستشعرات الخلية','Sensores da colmeia','মৌচাকের সেন্সর','Capteurs de ruche','Stock-Sensoren'],
 ['Показатель','Metric','指标','माप','Medida','القياس','Medida','পরিমাপ','Mesure','Messwert'],
 ['Температура','Temperature','温度','तापमान','Temperatura','درجة الحرارة','Temperatura','তাপমাত্রা','Température','Temperatur'],
@@ -33,6 +35,7 @@ export const technologyRows=[
 ];
 // Detailed compatibility and error copy uses English fallback until reviewed translations arrive.
 const details=[
+['В ответе нет ссылок на материалы. Сверьте его с памятками ниже.','The answer has no citations. Compare it with the guides below.'],
 ['Показания хранятся отдельно на этом устройстве. Экспортируйте их отдельно. Датчик не определяет здоровье семьи.','Readings stay separately on this device. Export them separately. Sensors do not diagnose colony health.'],
 ['Bluetooth: только Environmental Sensing, температура и влажность. Вес импортируется из CSV / JSON. Поддержка зависит от браузера.','Bluetooth: Environmental Sensing temperature and humidity only. Import weight via CSV / JSON. Support depends on the browser.'],
 ['Импорт добавляет показания к открытому улью. Bluetooth сохраняет не чаще одного замера в минуту для каждого показателя. Уведомления видны только при открытой панели.','Imports belong to the open hive. Bluetooth stores at most one reading per minute per metric. Alerts appear only while this panel is open.'],

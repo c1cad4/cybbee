@@ -13,3 +13,6 @@ test('named QR label escapes user content and preserves QR graphics',()=>{const 
 test('technology interface has ten nonempty locale entries per row',()=>{for(const r of technologyRows){assert.equal(r.length,10);assert.ok(r.every(x=>typeof x==='string'&&x.length>0));}});
 import {comparablePhotos} from '../photo-compare.js';
 test('photo comparison includes only current-hive active notes and sorts by date',()=>{const photos=[{id:'b',noteId:'n2',blob:{}},{id:'a',noteId:'n1',blob:{}},{id:'c',noteId:'archived',blob:{}},{id:'d',noteId:'other',blob:{}}];const notes=[{id:'n1',date:'2026-01-01'},{id:'n2',date:'2026-02-01'},{id:'archived',date:'2026-03-01',archived:true}];assert.deepEqual(comparablePhotos(photos,notes).map(x=>x.id),['a','b']);});
+
+import {translation,languages} from '../presentation.js';
+test('dynamic reference buttons translate into every supported language',()=>{for(const [lang]of languages.filter(([l])=>l!=='ru'))for(const label of ['Источник ↗','Читать памятку'])assert.notEqual(translation(label,lang),label)});
