@@ -240,3 +240,16 @@ export const releaseRows=[
   "JSON-Tagebuch bis 2 MB wählen. Fotos separat wiederherstellen."
  ]
 ];
+
+releaseRows.push([
+'10 языков интерфейса и кратких памяток. Полные основные памятки доступны на русском и английском; зимовка — на всех 10 языках. Для других тем объём перевода различается. Сезонная тема — оформление, а не прогноз погоды или срок обработки.',
+'Interface and concise guides in 10 languages. Full core guides are available in Russian and English; wintering is available in all 10. Other topics have varying translation coverage. Seasonal themes are visual, not weather forecasts or treatment dates.',
+'界面和简明指南支持10种语言。完整基础指南有俄语和英语版；越冬指南支持全部10种语言。其他主题翻译范围不同。季节主题仅为外观，不是天气预报或处理日期。',
+'इंटरफ़ेस और संक्षिप्त गाइड 10 भाषाओं में हैं। पूरे मूल गाइड रूसी और अंग्रेज़ी में; शीतकालीन गाइड सभी 10 में है। अन्य विषयों में अनुवाद का विस्तार अलग है। मौसमी थीम केवल रूप है, मौसम या उपचार की तारीख नहीं।',
+'Interfaz y guías breves en 10 idiomas. Las guías básicas completas están en ruso e inglés; la invernada, en los 10. La cobertura de otros temas varía. El tema estacional es visual, no un pronóstico ni una fecha de tratamiento.',
+'الواجهة والأدلة الموجزة بعشر لغات. الأدلة الأساسية الكاملة بالروسية والإنجليزية؛ ودليل الشتاء باللغات العشر. تختلف تغطية المواضيع الأخرى. مظهر الموسم ليس توقعاً للطقس أو موعداً للعلاج.',
+'Interface e guias resumidos em 10 idiomas. Guias básicos completos em russo e inglês; inverno nos 10 idiomas. A tradução de outros temas varia. O tema sazonal é visual, não uma previsão nem data de tratamento.',
+'ইন্টারফেস ও সংক্ষিপ্ত গাইড ১০ ভাষায়। পূর্ণ মূল গাইড রুশ ও ইংরেজিতে; শীতযাপন গাইড সব ১০ ভাষায়। অন্য বিষয়ের অনুবাদের পরিধি ভিন্ন। মৌসুমি থিম শুধু সাজসজ্জা, আবহাওয়া বা চিকিৎসার তারিখ নয়।',
+'Interface et guides concis en 10 langues. Guides de base complets en russe et anglais ; hivernage dans les 10 langues. La couverture des autres sujets varie. Le thème saisonnier est visuel, pas une prévision ni une date de traitement.',
+'Oberfläche und Kurzanleitungen in 10 Sprachen. Vollständige Basisanleitungen auf Russisch und Englisch, Überwinterung in allen 10 Sprachen. Andere Themen sind unterschiedlich weit übersetzt. Das Saisondesign ist keine Wettervorhersage oder Behandlungsvorgabe.'
+]);

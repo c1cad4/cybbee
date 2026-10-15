@@ -1,3 +1,4 @@
+import {fullGuideLocales} from './guide-full-locales.js';
 // Original localized editorial summaries; publisher texts are linked, not translated or mirrored.
 export const guideOrder=['winter','swarm','queen','varroa','oxalic','first-visit','spring','summer','autumn','feeding','journal','community-guide','honey'];
 const content={
@@ -120,4 +121,4 @@ Nützliche Erfahrungen teilen|Nutzen Sie Chat für Fragen und Tagebuch für zusa
 Honig, Hygiene und Rückverfolgbarkeit|Prüfen Sie vor der Ernte Vorräte und Einschränkungen verwendeter Mittel.|Nutzen Sie saubere Lebensmittelgeräte; erfassen Sie Datum, Beute und Herkunft der Charge.|Notieren Sie gemessene Masse und Methode, trennen Sie Schätzungen und prüfen Sie örtliche Verkaufsregeln.`
 };
 export const guideLocales=Object.fromEntries(Object.entries(content).map(([lang,lines])=>[lang,Object.fromEntries(lines.split('\n').map((line,i)=>{const [title,...steps]=line.split('|');return [guideOrder[i],{title,steps,intro:steps[0]}]}))]));
-export function localizedGuide(g,lang='ru'){const copy=guideLocales[lang]?.[g.id];return copy?{...g,...copy,tag:'CybBee',sections:[],scenarios:[],checklist:[],faq:[],localizedSummary:true}:g;}
+export function localizedGuide(g,lang='ru'){const code=String(lang).toLowerCase().split(/[-_]/)[0],copy=guideLocales[code]?.[g.id],full=fullGuideLocales[code]?.[g.id];if(copy&&full)return {...g,...copy,...full,tag:'CybBee'};return copy?{...g,...copy,tag:'CybBee',sections:[],scenarios:[],checklist:[],faq:[],localizedSummary:true}:g;}
