@@ -9,3 +9,5 @@ test('every themed caption is translated and fallback icon remains local',()=>{
  for(const row of apiaryRows){assert.equal(row.length,10);for(let i=0;i<languages.length;i++)assert.equal(translation(row[0],languages[i][0]),row[i]);}
  const svg=hiveIcon('unknown');assert.ok(svg.includes('viewBox="0 0 48 48"'));assert.ok(!svg.includes('http'));assert.ok(!svg.includes('<script'));
 });
+import {badgeFrames,badgeFrame} from '../apiary-theme.js';
+test('each section has a distinct illuminated badge silhouette without changing its route or label',()=>{const ids=['today','hives','calendar','learn','ledger','flora','library','bees','community','ai','plans','settings'];assert.equal(new Set(ids.map(id=>badgeFrames[id])).size,ids.length);for(const id of ids){const html=apiaryNavButton(id,id,'en');assert.ok(html.includes('nav-badge-frame'));assert.ok(html.includes(`data-page="${id}"`));assert.ok(badgeFrame(id).includes('aria-hidden="true"'));}});

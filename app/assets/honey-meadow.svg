@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1000" fill="none">
+<defs>
+ <linearGradient id="stem" x2="1" y2="1"><stop stop-color="#8caa65"/><stop offset="1" stop-color="#506c47"/></linearGradient>
+ <radialGradient id="light"><stop stop-color="#ffcf69" stop-opacity=".4"/><stop offset="1" stop-color="#ffe9af" stop-opacity="0"/></radialGradient>
+ <g id="daisy"><g fill="#fffdf0" stroke="#e9cc86" stroke-width=".6"><ellipse cy="-19" rx="7" ry="18"/><ellipse cy="-19" rx="7" ry="18" transform="rotate(45)"/><ellipse cy="-19" rx="7" ry="18" transform="rotate(90)"/><ellipse cy="-19" rx="7" ry="18" transform="rotate(135)"/><ellipse cy="-19" rx="7" ry="18" transform="rotate(180)"/><ellipse cy="-19" rx="7" ry="18" transform="rotate(225)"/><ellipse cy="-19" rx="7" ry="18" transform="rotate(270)"/><ellipse cy="-19" rx="7" ry="18" transform="rotate(315)"/></g><circle r="12" fill="#e8ac38"/><circle r="7" fill="#f5c75b"/><g fill="#ab742b"><circle cx="-4" cy="-3" r="1"/><circle cx="4" cy="2" r="1"/><circle cy="5" r="1"/></g></g>
+ <g id="cosmos"><g fill="#eeb7a3"><ellipse cy="-19" rx="12" ry="21"/><ellipse cy="-19" rx="12" ry="21" transform="rotate(60)"/><ellipse cy="-19" rx="12" ry="21" transform="rotate(120)"/><ellipse cy="-19" rx="12" ry="21" transform="rotate(180)"/><ellipse cy="-19" rx="12" ry="21" transform="rotate(240)"/><ellipse cy="-19" rx="12" ry="21" transform="rotate(300)"/></g><g stroke="#d49078" stroke-opacity=".5"><path d="M0-9v-24m8 28 20-13m-18 22 19 12M0 9v23M-9 4l-20 13m20-22-20-12"/></g><circle r="10" fill="#e8b13e"/><circle r="5" fill="#8e6d3a"/></g>
+ <g id="leaf"><path d="M0 0Q-34-35-61-25Q-44 10 0 0" fill="#91a874"/><path d="M0 0-49-22" stroke="#6d8557"/></g>
+ <g id="lavender"><path d="M0 93Q-4 36 0-18" stroke="#809468" stroke-width="3"/><g fill="#b4a2c3"><ellipse cy="-12" rx="5" ry="9"/><ellipse cx="-6" cy="1" rx="5" ry="9" transform="rotate(-25 -6 1)"/><ellipse cx="6" cy="3" rx="5" ry="9" transform="rotate(25 6 3)"/><ellipse cx="-7" cy="18" rx="5" ry="9" transform="rotate(-25 -7 18)"/><ellipse cx="7" cy="20" rx="5" ry="9" transform="rotate(25 7 20)"/><ellipse cx="-7" cy="36" rx="5" ry="9" transform="rotate(-25 -7 36)"/><ellipse cx="7" cy="38" rx="5" ry="9" transform="rotate(25 7 38)"/></g></g>
+</defs>
+<ellipse cx="1270" cy="700" rx="370" ry="350" fill="url(#light)"/><ellipse cx="100" cy="960" rx="470" ry="230" fill="url(#light)"/>
+<g opacity=".72" stroke="url(#stem)" stroke-width="3" stroke-linecap="round">
+<path d="M-30 1020Q65 854 122 767M18 1020Q18 890 63 852M85 1020Q137 903 191 877M113 1020Q115 920 96 908M140 1020Q217 924 248 947M-8 1020Q-9 932 18 913"/>
+<path d="M1445 1020Q1350 833 1301 738M1400 1020Q1433 897 1399 849M1345 1020Q1305 929 1230 899M1320 1020Q1328 915 1346 881M1270 1020Q1237 968 1177 959"/>
+</g>
+<g opacity=".78">
+<use href="#leaf" transform="translate(80 903) rotate(15) scale(.9)"/><use href="#leaf" transform="translate(47 946) rotate(150) scale(.75)"/><use href="#leaf" transform="translate(136 969) rotate(50) scale(.85)"/><use href="#leaf" transform="translate(184 925) rotate(155) scale(.7)"/>
+<use href="#leaf" transform="translate(1371 925) rotate(25) scale(.9)"/><use href="#leaf" transform="translate(1340 852) rotate(150) scale(.8)"/><use href="#leaf" transform="translate(1293 964) rotate(-15) scale(.85)"/><use href="#leaf" transform="translate(1411 974) rotate(145) scale(.8)"/>
+<use href="#daisy" transform="translate(122 767) rotate(14) scale(.92)"/><use href="#cosmos" transform="translate(63 852) rotate(-20) scale(.85)"/><use href="#daisy" transform="translate(191 877) rotate(-12) scale(.68)"/><use href="#cosmos" transform="translate(96 908) rotate(20) scale(.6)"/><use href="#daisy" transform="translate(248 947) scale(.6)"/>
+<use href="#lavender" transform="translate(12 902) rotate(-18)"/><use href="#lavender" transform="translate(212 922) rotate(20) scale(.75)"/>
+<use href="#cosmos" transform="translate(1301 738) rotate(17) scale(1.05)"/><use href="#daisy" transform="translate(1399 849) rotate(25)"/><use href="#daisy" transform="translate(1230 899) rotate(-20) scale(.72)"/><use href="#cosmos" transform="translate(1346 881) rotate(-30) scale(.65)"/><use href="#daisy" transform="translate(1177 959) scale(.55)"/><use href="#lavender" transform="translate(1422 780) rotate(-15) scale(1.3)"/><use href="#lavender" transform="translate(1274 936) rotate(-25) scale(.9)"/>
+</g>
+<g fill="#e8bd58" opacity=".4"><circle cx="235" cy="766" r="3"/><circle cx="78" cy="678" r="2"/><circle cx="1388" cy="659" r="3"/><circle cx="1214" cy="785" r="2"/><circle cx="1320" cy="576" r="2"/><circle cx="352" cy="927" r="2"/></g>
+<path d="M1340 90q-35 12-24 43t-32 45M55 208q40 20 27 58t43 58" stroke="#d9b66c" stroke-width="1.2" stroke-dasharray="2 9" opacity=".3"/>
+</svg>
