@@ -99,3 +99,8 @@ body,body[data-season]{background-color:var(--honey-paper);background-image:radi
 @keyframes meadow-flight-two{0%,100%{transform:translate(0,0) rotate(8deg)}35%{transform:translate(5px,-32px) rotate(-10deg)}65%{transform:translate(-2px,12px) rotate(4deg)}}
 @keyframes meadow-flight-three{0%,100%{transform:translate(0,0) rotate(-5deg)}30%{transform:translate(-5px,-22px) rotate(8deg)}70%{transform:translate(3px,-55px) rotate(-8deg)}}
 html[dir=rtl] .garden-flight-layer{inset:0 246px 0 0}@media(max-width:760px){.garden-flight-layer,html[dir=rtl] .garden-flight-layer{inset:0}.garden-bee-1{width:17px;right:0;top:42%;opacity:.6}.garden-bee-2,.garden-bee-3{display:none}}
+
+/* Honey glass and etched wildflowers behind the navigation buttons. */
+aside{background-color:#3c3827;background-image:linear-gradient(90deg,#27261908,#302b2350 46%,#302b2370),url('assets/honey-sidebar.svg'),radial-gradient(ellipse at 20% 0%,#ac7b37aa,transparent 66%),linear-gradient(165deg,#67502c,#30382a);background-size:100% 100%,100% auto,100% 100%,100% 100%;background-position:center top;background-repeat:no-repeat,repeat-y,no-repeat,no-repeat;border-right:1px solid #f3cc7959;box-shadow:inset -1px 0 #ffe0a825,8px 0 30px #6c4d1a14}
+aside .brand{filter:drop-shadow(0 2px 5px #201d1240)}aside>p{color:#f3dfb5}.apiary-nav-item:not(.active){background:linear-gradient(100deg,#fff0be05,#fff0be00)}.apiary-nav-item:not(.active):hover{background:#fff2cc0d;border-color:#eaca8555}
+@media(max-width:760px){aside{background-size:100% 100%,300px auto,100% 100%,100% 100%;background-position:center top,right -28px top -75px,center top,center top;border-right:0;border-bottom:1px solid #e6c27b70}.apiary-nav-item:not(.active){background:none}}
