@@ -130,3 +130,5 @@ aside .brand{filter:drop-shadow(0 2px 5px #201d1240)}aside>p{color:#f3dfb5}.apia
 body:has(dialog[open]){overflow:hidden}
 @media(max-width:360px){nav .nav-label{font-size:10px}.card{padding:14px}.extra-nav .nav-theme{display:none}.extra-nav .apiary-nav-item{gap:6px!important;padding:6px!important}.extra-nav .nav-wax{flex-basis:29px!important;width:29px!important}main,html[dir=rtl] main{padding-inline:10px}}
 @media(max-width:760px){nav .nav-caption,nav .nav-label,nav .nav-theme{color:inherit}nav .nav-caption{opacity:1}}
+/* Payment details remain readable on narrow screens and with long wallet addresses. */
+.pro-access,.invoice-detail{min-width:0;overflow-wrap:anywhere}.invoice-history>div{display:flex;flex-wrap:wrap;gap:10px}.invoice-history button{max-width:100%;white-space:normal;text-align:start}#wallet-status{overflow-wrap:anywhere;font-family:monospace}.invoice-detail{border:1px solid #e1c080;background:#fff6dc;padding:18px;border-radius:16px;margin-block:16px}.invoice-detail>button{margin-block:10px}.invoice-detail details{margin-top:12px}.invoice-detail p[role=status]{font-weight:600}

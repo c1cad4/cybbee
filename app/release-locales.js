@@ -1,3 +1,4 @@
+import {proRows} from './pro-locales.js';
 export const releaseRows=[
  [
   "Приём оплаты пока отключён.",
@@ -279,3 +280,5 @@ releaseRows.push(...[
 ['Подписка привязана к аккаунту ChatGPT. Кошелёк нужен для оплаты; подключение не списывает средства.','Your subscription belongs to your ChatGPT account. Connecting a wallet does not transfer funds.','订阅绑定您的 ChatGPT 账户。连接钱包不会扣款。','सदस्यता आपके ChatGPT खाते से जुड़ी है। वॉलेट जोड़ने से धन नहीं कटता।','La suscripción pertenece a tu cuenta de ChatGPT. Conectar el monedero no transfiere fondos.','الاشتراك مرتبط بحساب ChatGPT. ربط المحفظة لا يحوّل الأموال.','A assinatura pertence à sua conta ChatGPT. Conectar a carteira não transfere fundos.','সাবস্ক্রিপশন আপনার ChatGPT অ্যাকাউন্টের। ওয়ালেট সংযোগ করলে টাকা কাটে না।','L’abonnement est lié à votre compte ChatGPT. La connexion du portefeuille ne transfère pas de fonds.','Das Abonnement gehört zu Ihrem ChatGPT-Konto. Beim Verbinden werden keine Gelder übertragen.'],
 ['На телефоне откройте сайт во встроенном браузере Phantom или Solflare. Также можно оплатить через ссылку Solana Pay без подключения.','On mobile, open this site in Phantom or Solflare. You can also use the Solana Pay link without connecting.','手机上请在 Phantom 或 Solflare 内打开网站。也可直接使用 Solana Pay 链接。','फ़ोन पर Phantom या Solflare में साइट खोलें। बिना कनेक्ट किए Solana Pay लिंक भी उपयोग कर सकते हैं।','En el móvil, abre el sitio en Phantom o Solflare. También puedes usar el enlace Solana Pay sin conectar.','على الهاتف افتح الموقع داخل Phantom أو Solflare. يمكنك أيضًا استخدام رابط Solana Pay دون ربط.','No celular, abra o site no Phantom ou Solflare. Também pode usar o link Solana Pay sem conectar.','ফোনে Phantom বা Solflare-এ সাইট খুলুন। সংযোগ ছাড়াও Solana Pay লিংক ব্যবহার করা যায়।','Sur mobile, ouvrez le site dans Phantom ou Solflare. Le lien Solana Pay fonctionne aussi sans connexion.','Mobil die Seite in Phantom oder Solflare öffnen. Der Solana-Pay-Link funktioniert auch ohne Verbindung.']
 ]);
+
+releaseRows.push(...proRows);

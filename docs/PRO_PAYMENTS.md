@@ -22,3 +22,9 @@ Production checkout is still disabled (`CHECKOUT_ENABLED` must equal `1` to crea
 - https://docs.phantom.com/solana/integrating-phantom
 - https://docs.solanapay.com/spec
 - https://solana.com/ru/docs/rpc/http/getsignaturesforaddress
+
+## Version 47: payment screen reliability
+
+The account panel distinguishes free, expired and active access and offers a server status refresh. A payment link arms one reference lookup on return to the visible app (focus/visibility events). It does not run continuous background polling. Concurrent or repeated reference lookups for the selected invoice are bounded by a 20-second client cooldown; server rate limits still apply. Switching invoice or leaving the page disposes the timer and event handlers and ignores in-flight responses for the old view.
+
+A one-second local display timer hides an unpaid invoice link at its expiry; clicking also rechecks expiry. It performs no network request. Verification remains available for transfers already sent within the original payment window. Manual signature entry is under a disclosure. New payment instructions and state messages have ten translations. Local QA uses synthetic invoices and no funds. A narrow browser viewport showed no horizontal overflow; this is not a physical-device wallet test.
