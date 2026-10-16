@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {walletProviders,connectWallet} from '../wallet.js';
+test('wallet discovery does not connect or request signatures',()=>{let calls=0;const provider={connect(){calls++}};assert.equal(walletProviders({phantom:{solana:provider}}).length,1);assert.equal(calls,0);assert.deepEqual(walletProviders({solana:{}}),[])});
+test('connection accepts public address and propagates wallet rejection',async()=>{const publicKey='A'.repeat(44);assert.equal(await connectWallet({connect:async()=>({publicKey})}),publicKey);await assert.rejects(connectWallet({connect:async()=>({publicKey:'bad'})}));await assert.rejects(connectWallet({connect:async()=>{throw Error('rejected')}}),/rejected/)});

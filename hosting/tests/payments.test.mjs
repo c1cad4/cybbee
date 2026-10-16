@@ -24,3 +24,14 @@ test('invoice freeze, account isolation, finalized verification, replay preventi
   assert.equal((await call('invoices',{requestId:'33333333-3333-4333-8333-333333333333',plan:'monthly',asset:'sol'},'buyer',{})).status,400);
  }finally{globalThis.fetch=original;await f.cleanup()}
 });
+test('reference discovery ignores invalid candidates, activates once and isolates invoice history',async()=>{
+ const f=await fixtureDB(),original=globalThis.fetch;const id='44444444-4444-4444-8444-444444444444',reference='B'.repeat(44),signature='D'.repeat(87),created=Math.floor(Date.now()/1000),recipient='AHBz386tP36ZrABN7STzxV66u1f7CwnaqrFBnevb4ff8';
+ const invoice={id,reference,created,expires:created+900,asset:'sol',plan:'monthly',units:'100',amount:'0.000000100',usd:10,assetLabel:'SOL'};
+ f.execute([{sql:'INSERT INTO bee_invoices(id,owner,payload) VALUES(?,?,?)',values:[id,'buyer',JSON.stringify(invoice)]}]);
+ let found=[];globalThis.fetch=async(url,options)=>{const body=JSON.parse(options.body);assert.equal(body.params[1].commitment,'finalized');return Response.json({result:body.method==='getSignaturesForAddress'?found:{blockTime:created,meta:{err:null,preBalances:[0,0],postBalances:[100,0]},transaction:{message:{accountKeys:[recipient,reference],instructions:[{programId:'11111111111111111111111111111111',parsed:{type:'transfer',info:{destination:recipient,lamports:100}}}]}}}})};
+ const call=(path,p,owner='buyer')=>api(new Request('https://bee.test/api/payments/'+path,{method:p?'POST':'GET',headers:{Origin:'https://bee.test','oai-authenticated-user-id':owner},...(p?{body:JSON.stringify(p)}:{})}),{DB:f.db});
+ try{assert.equal((await (await call('invoices')).json()).invoices.length,1);assert.equal((await (await call('invoices',null,'other')).json()).invoices.length,0);assert.equal((await call('find',{invoice:id},'other')).status,404);
+ assert.equal((await (await call('find',{invoice:id})).json()).paid,false);found=[{signature,err:null,confirmationStatus:'confirmed'}];assert.equal((await (await call('find',{invoice:id})).json()).paid,false);
+ found=[{signature,err:null,confirmationStatus:'finalized'}];const paid=await (await call('find',{invoice:id})).json();assert.equal(paid.active,true);assert.deepEqual(await (await call('find',{invoice:id})).json(),paid);
+ }finally{globalThis.fetch=original;await f.cleanup()}
+});
