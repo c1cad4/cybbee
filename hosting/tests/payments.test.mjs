@@ -35,3 +35,9 @@ test('reference discovery ignores invalid candidates, activates once and isolate
  found=[{signature,err:null,confirmationStatus:'finalized'}];const paid=await (await call('find',{invoice:id})).json();assert.equal(paid.active,true);assert.deepEqual(await (await call('find',{invoice:id})).json(),paid);
  }finally{globalThis.fetch=original;await f.cleanup()}
 });
+test('receipts require the invoice owner and confirmed payment, and contain the actual transaction',async()=>{
+ const f=await fixtureDB(),id='55555555-5555-4555-8555-555555555555',signature='E'.repeat(87),invoice={id,plan:'monthly',asset:'sol',usd:10,amount:'0.1',units:'100000000',assetLabel:'SOL',created:100,expires:1000};
+ await f.db.prepare('INSERT INTO bee_invoices(id,owner,payload) VALUES(?,?,?)').bind(id,'buyer',JSON.stringify(invoice)).run();
+ const call=owner=>api(new Request('https://bee.test/api/payments/receipt?id='+id,{headers:owner?{'oai-authenticated-user-id':owner}:{}}),{DB:f.db});
+ try{assert.equal((await call()).status,401);assert.equal((await call('other')).status,404);assert.equal((await call('buyer')).status,409);await f.db.prepare('UPDATE bee_invoices SET paid=1,signature=? WHERE id=?').bind(signature,id).run();const result=await call('buyer');assert.equal(result.status,200);assert.equal(result.headers.get('Cache-Control'),'no-store');const receipt=await result.json();assert.equal(receipt.invoice,id);assert.equal(receipt.signature,signature);assert.equal(receipt.amount,'0.1');assert.equal(receipt.network,'solana-mainnet');assert.equal(receipt.subscription.active,false);assert.equal(receipt.owner,undefined);assert.equal(receipt.mint,null);assert.equal((await call('other')).status,404)}finally{await f.cleanup()}
+});
